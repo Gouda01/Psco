@@ -64,6 +64,17 @@
             font-size: 1.5rem;
         }
         
+        /* Mobile menu toggle button */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--dark);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 10px;
+        }
+        
         .nav-links {
             display: flex;
             list-style: none;
@@ -456,25 +467,37 @@
             scroll-margin-top: 80px;
         }
         
-        /* Responsive */
-        @media (max-width: 992px) {
-            .about-content,
-            .contact-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .about-img {
-                order: -1;
-            }
-            
-            .footer-content {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
+        /* Mobile menu styles */
         @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
             .nav-links {
-                display: none;
+                position: fixed;
+                top: 80px;
+                right: -100%;
+                width: 80%;
+                height: calc(100vh - 80px);
+                background-color: white;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+                box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1);
+                transition: right 0.3s ease;
+                z-index: 999;
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-links li {
+                margin: 15px 0;
+            }
+            
+            .cta-button {
+                margin-right: auto;
             }
             
             .hero h2 {
@@ -505,6 +528,11 @@
                     <img src="https://via.placeholder.com/50x50" alt="Logo">
                     <h1>الشركة المثالية</h1>
                 </div>
+                
+                <button class="menu-toggle" aria-label="Toggle menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
                 <ul class="nav-links">
                     <li><a href="#home">الرئيسية</a></li>
                     <li><a href="#features">خدماتنا</a></li>
@@ -775,6 +803,23 @@
     </footer>
 
     <script>
+      // Mobile menu toggle
+      const menuToggle = document.querySelector('.menu-toggle');
+      const navLinks = document.querySelector('.nav-links');
+
+      menuToggle.addEventListener('click', function() {
+          navLinks.classList.toggle('active');
+      });
+
+      // Close menu when clicking on a link
+      document.querySelectorAll('.nav-links a').forEach(link => {
+          link.addEventListener('click', function() {
+              if (window.innerWidth <= 768) {
+                  navLinks.classList.remove('active');
+              }
+          });
+      });
+
       // Smooth scrolling and active link highlighting
       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
