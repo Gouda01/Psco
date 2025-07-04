@@ -1,0 +1,410 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}تفاصيل موظف  {% endblock title %}
+
+
+{% block css %}
+
+
+
+{% endblock css %}
+
+
+{% block content %}
+
+<div class="page-content">
+    <div class="container-fluid">
+
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0"> تفاصيل موظف </h4>
+
+                    <div class="page-title-right">
+                        <a href="#" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#EmployerNoteModal"
+                        data-id="{{ employer.id }}"><i class="ri-add-line align-bottom me-1"></i>اضافة ملاحظة</a>
+                        <a href="javascript:window.print()" class="btn btn-primary btn-sm"><i class="ri-printer-line align-bottom me-1"></i>طباعة</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+            
+            <div class="col-sm-6 col-xl-6">
+                <div class="col-xxl-12">
+                    <div class="card border">
+                        
+                        <div class="card-body">
+                            
+                            <h5 class="text-danger">البيانات الرئيسية</h5>
+                            <br>
+
+                            <!-- Striped Rows -->
+                            <table class="table table-striped">
+                                
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 30%;">اسم الموظف</td>
+                                        <td>{{ employer.user.full_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 30%;">رقم الموبايل</td>
+                                        <td>{{ employer.phone_number|default_if_none:"-" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 30%;">رقم البطاقة</td>
+                                        <td>{{ employer.national_number|default_if_none:"-" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 30%;">الوظيفة</td>
+                                        <td>{{ employer.user.job }}</td>
+                                    </tr>
+                                    
+                                    
+                                    <tr>
+                                        <td style="width: 30%;">الملف</td>
+                                        {% if agent.document %}
+                                            <td scope="col"><a href="{{ agent.document.url }}" target="_blank"><span class="badge bg-success fs-6"> اضغط لفتح الملف</span></a></td>
+                                        {% else %}
+                                            <td scope="col"><span class="badge bg-danger fs-6">لا يوجد ملف</span></td>
+                                        {% endif %}
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 30%;">التفاصيل</td>
+                                        <td>{{ employer.details }}</td>
+                                    </tr>                                            
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div><!-- end col -->
+            </div>
+
+            <div class="col-sm-6 col-xl-6">
+                <div class="col-xxl-12">
+                    <div class="card border">
+                        
+                        <div class="card-body">
+                            
+                            <h5 class="text-danger">بيانات الحساب</h5>
+                            <br>
+
+                            <!-- Striped Rows -->
+                            <table class="table table-striped">
+                                
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 25%;">اسم المستخدم</td>
+                                        <td>{{ employer.user.full_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 25%;">الايميل</td>
+                                        <td>{{ employer.user.email|default_if_none:"-" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 25%;">الحالة</td>
+                                        {% if employer.user.active is True %}
+                                        <td><span class="badge bg-success fs-6">فعال</span></td>
+                                        {% elif employer.user.active is False %}
+                                        <td><span class="badge bg-danger fs-6">متوقف</span></td>
+                                        {% endif %}
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                            
+                        </div>
+                    </div>
+                </div><!-- end col -->
+            </div>
+
+
+            <div class="col-sm-6 col-xl-12">
+                <div class="col-xxl-12">
+                    <div class="card border">
+                        
+                        <div class="card-body">
+                            
+                            <h5 class="text-danger">ملاحظات الموظف</h5>
+                            <br>
+
+                            <table id="example" class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:100%">
+                                <thead>
+                                    <tr class="bg-warning">
+                                        <th data-ordering="false" style="width: 5%;">#</th>
+                                        <th data-ordering="false" style="width: 20%;">التاريخ والوقت</th>
+                                        <th data-ordering="false">الملاحظة</th>
+                                        <th data-ordering="false" style="width: 10%;" class="d-print-none">اجراء</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    {% for note in notes %}
+                                    <tr>
+                                        
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ note.date|date:"A h:i - Y/m/d" }}</td>
+                                        <td>{{ note.notes }}</td>
+                                        <td class="d-print-none">
+                                            <div class="dropdown d-inline-block">
+                                                <button class="btn btn-soft-secondary btn-sm dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="ri-more-fill align-middle"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    
+                                                    <li>
+                                                        <a href="#!" class="dropdown-item remove-item-btn" data-bs-toggle="modal" data-bs-target="#editDeliveryNoteModal"
+                                                            data-id="{{ note.id }}"
+                                                            data-notes="{{ note.notes }}">
+                                                            <i class="ri-pencil-fill align-bottom me-2 text-muted"></i> تعديل
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <a href="#!" class="dropdown-item remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteDeliveryNoteModal"
+                                                            data-id="{{ note.id }}"
+                                                            data-notes="{{ note.notes }}">
+                                                            <i class="ri-delete-bin-fill align-bottom me-2 text-muted"></i> حذف
+                                                        </a>
+                                                    </li>
+
+                                                    
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div><!-- end col -->
+            </div>
+            
+
+        </div><!-- end row -->
+
+    </div>
+    <!-- container-fluid -->
+</div>
+
+
+<!-- Modal Edit Delivery Man Note -->
+<div id="editDeliveryNoteModal" class="modal fade flip" tabindex="-1" aria-labelledby="flipModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="flipModalLabel">تعديل ملاحظة موظف</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'userauths:edit-employer-note' %}" method="post">
+                {% csrf_token %}
+
+                <div class="modal-body">
+                    
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="live-preview">
+                                        <div class="row gy-4">
+                                            <div class="col-xxl-12 col-md-12">
+                                                <div>
+                                                    <input type="text" class="form-control" name="notes" id="notes" required>
+                                                    <input type="hidden" class="form-control" name="id" id="id" required>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                                                                                        
+                                        </div>
+                                        <!--end row-->
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <!--end col-->
+                    </div>
+                    <!--end row-->
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success ">تعديل</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">الغاء</button>
+                    
+                </div>
+
+            </form>
+            
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!-- Modal Edit Delivery Man Note -->
+<div id="deleteDeliveryNoteModal" class="modal fade flip" tabindex="-1" aria-labelledby="flipModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="flipModalLabel">تعديل ملاحظة موظف</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'userauths:delete-employer-note' %}" method="post">
+                {% csrf_token %}
+
+                <div class="modal-body">
+                    <h5 class="fs-16">
+                        هل انت متأكد من حذف ملاحظة موظف : 
+                    </h5>
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="live-preview">
+                                        <div class="row gy-4">
+                                            <div class="col-xxl-12 col-md-12">
+                                                <div>
+                                                    <input type="text" class="form-control" name="notes" id="notes" readonly required>
+                                                    <input type="hidden" class="form-control" name="id" id="id" required>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                                                                                        
+                                        </div>
+                                        <!--end row-->
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <!--end col-->
+                    </div>
+                    <!--end row-->
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger ">تأكيد</button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">الغاء</button>
+                    
+                </div>
+
+            </form>
+            
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<!-- Modal Add Employer Note -->
+<div id="EmployerNoteModal" class="modal fade flip" tabindex="-1" aria-labelledby="flipModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="flipModalLabel"> اضافة ملاحظة لموظف</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'userauths:add-employer-note' %}" method="post">
+                {% csrf_token %}
+
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="live-preview">
+                                        <div class="row gy-4">
+                                            <div class="col-xxl-12 col-md-12">
+                                                <div>
+                                                    <input type="hidden" class="form-control" name="id" id="id" required>
+                                                    <textarea class="form-control" name="notes" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                                                                                        
+                                        </div>
+                                        <!--end row-->
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <!--end col-->
+                    </div>
+                    <!--end row-->
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger ">تأكيد </button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">الغاء</button>
+                    
+                </div>
+
+            </form>
+            
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+    
+{% endblock content %}
+
+
+{% block js %}
+
+
+<script src="{% static 'assets/custom/js/jquery-3.7.1.min.js' %}"></script>
+
+
+<script>
+    
+    $('#editDeliveryNoteModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        var notes = button.data('notes')
+        
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+        modal.find('.modal-body #notes').val(notes);
+    
+    });
+
+    $('#deleteDeliveryNoteModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        var notes = button.data('notes')
+        
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+        modal.find('.modal-body #notes').val(notes);
+    
+    });
+
+    $('#EmployerNoteModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+    
+    });
+
+
+    
+
+</script>
+
+{% endblock js %}

@@ -1,0 +1,22 @@
+@font-face {
+    font-family: cairo;
+    src: url('Cairo-font.ttf');
+  }
+
+body {
+    font-family: cairo;
+}
+
+.form-select.form-select-solid {
+  direction: rtl !important;
+}
+
+table.dataTable.table-sm>thead>tr>th:not(.sorting_disabled) {
+  text-align: right !important;
+}
+
+table.dataTable.table-bordered tr:last-child td, table.dataTable.table-bordered tr:last-child th
+
+ {
+    text-align: right !important;
+}

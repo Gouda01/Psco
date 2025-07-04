@@ -1,0 +1,155 @@
+@font-face {
+    font-family: cairo;
+    src: url('Cairo-font.ttf');
+  }
+
+body {
+    font-family: cairo;
+    color: black;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+    font-family: cairo;
+}
+
+.navbar-header {
+    height: 60px;
+}
+
+.topnav {
+    margin-top: 60px;
+}
+
+body[data-layout="horizontal"] .page-content {
+    margin-top: 25px;
+}
+
+.footer {
+    padding: 5px calc(1.5rem / 2);
+    height: 30px;
+    background-color: #dbdbdb;
+}
+
+.page-title-box {
+    padding-top: 0rem;
+    padding-bottom: 0.75rem;
+}
+
+.table > :not(caption) > * > * {
+    padding: 0.5rem 0.75rem !important;
+    color: black;
+}
+
+.table > thead {
+    background: #f8f8fa;
+    color: #eb0000;
+}
+
+
+.mywed {
+    border-radius: 7px;
+    box-shadow: 1px 1px 10px gray !important;
+}
+
+.text-white-50 {
+    color: rgb(255 255 255) !important;
+}
+
+body[data-layout="horizontal"][data-layout-size="boxed"] .container-fluid, body[data-layout="horizontal"][data-layout-size="boxed"] .navbar-header {
+    max-width: 100% !important;
+}
+body[data-sidebar=dark].vertical-collpsed {
+  min-height: 750px;
+}
+
+.page {
+    background: white;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 0.5cm;
+    box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+  }
+  .page[size="A4"] {  
+    width: 21cm;
+    height: 29.7cm; 
+  }
+  .page[size="A4"][layout="landscape"] {
+    width: 29.7cm;
+    height: 21cm;  
+  }
+  .page[size="A3"] {
+    width: 29.7cm;
+    height: 42cm;
+  }
+  .page[size="A3"][layout="landscape"] {
+    width: 42cm;
+    height: 29.7cm;  
+  }
+  .page[size="A5"] {
+    width: 14.8cm;
+    height: 21cm;
+  }
+  .page[size="A5"][layout="landscape"] {
+    width: 21cm;
+    height: 14.8cm;  
+  }
+  
+  .page[size="All"] {
+    width: 96%;
+    /* height: 96%;   */
+    height: 21cm;
+  }
+  
+  @media print {
+    body, page {
+      margin: 0;
+      box-shadow: 0;
+    }
+  }
+
+  .card-header {
+    background-color: #333547;
+    color: white;
+}
+
+.task-table > :not(caption) > * > * {
+  padding: 0.5rem 0.5rem !important;
+  font-size: 0.9rem;
+}
+
+.badge {
+  font-size: 100%;
+}
+
+.card {
+  background: rgb(255 255 255 / 100%);
+}
+
+
+.breadcrumb-item+.breadcrumb-item::before {
+  color: rgb(191 166 255);
+}
+
+.vertical-menu {
+  top: 60px;
+}
+
+#sidebar-menu ul li a {
+  font-family: cairo;
+}
+
+body[data-sidebar=dark] .navbar-brand-box {
+  height: 65px;
+  padding: 0 0rem;
+}
+
+.table.dataTable thead th , .table thead th {
+  color: red;
+  font-weight: bold;
+
+}
+
+#page-topbar {
+  background-color: #333547;
+}
+

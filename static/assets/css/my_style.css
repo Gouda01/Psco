@@ -1,0 +1,75 @@
+@font-face {
+    font-family: cairo;
+    src: url('rtl/Cairo-font.ttf');
+  }
+
+/* 
+.app-container {
+  padding-right: 12px !important;
+  padding-left: 12px !important;
+} */
+
+/* body:not([data-kt-app-toolbar-fixed=true]) .app-toolbar {
+  height: 50px;
+} */
+
+/* .app-header {
+  height: 55px !important;
+} */
+
+
+.table td:first-child, .table th:first-child, .table tr:first-child {
+    padding-left: 15px !important;
+    vertical-align: middle;
+}
+
+body, html {
+  font-family: cairo;
+}
+
+.mywed {
+  border-radius: 7px;
+  box-shadow: 1px 1px 10px rgb(202, 202, 202) !important;
+}
+
+details-table > :not(caption) > * > * {
+  padding: 0.5rem 0.5rem !important;
+  font-size: 1.12rem;
+}
+
+
+/* New */
+
+.content
+ {
+        padding: 12px 0 !important;
+    }
+
+.container, .container-xxl, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl
+    {
+        padding: 0 15px !important;
+    }
+
+
+
+table.dataTable thead > tr > th div.dt-column-header span.dt-column-title, table.dataTable thead > tr > th div.dt-column-footer span.dt-column-title, table.dataTable thead > tr > td div.dt-column-header span.dt-column-title, table.dataTable thead > tr > td div.dt-column-footer span.dt-column-title, table.dataTable tfoot > tr > th div.dt-column-header span.dt-column-title, table.dataTable tfoot > tr > th div.dt-column-footer span.dt-column-title, table.dataTable tfoot > tr > td div.dt-column-header span.dt-column-title, table.dataTable tfoot > tr > td div.dt-column-footer span.dt-column-title
+ {
+    text-align: start !important;
+}
+
+
+/*
+.aside-menu .menu-item .menu-link .menu-title {
+    color: #97979c !important;
+}
+
+.aside-menu .menu-item .menu-link .menu-icon, .aside-menu .menu-item .menu-link .menu-icon .svg-icon, .aside-menu .menu-item .menu-link .menu-icon i
+ {
+    color: #97979c !important;
+}
+
+.menu-item .menu-link .menu-arrow
+ {
+    color: #97979c !important;
+}
+*/

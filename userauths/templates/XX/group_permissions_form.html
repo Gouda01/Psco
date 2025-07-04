@@ -1,0 +1,25 @@
+<h2>Edit Group Permissions</h2>
+
+<form method="post">
+  {% csrf_token %}
+
+  {% for group in groups %}
+    <fieldset style="margin-bottom: 20px; border: 1px solid #ccc; padding: 10px;">
+      <legend><strong>{{ group.name }}</strong></legend>
+      
+      {% for perm in all_permissions %}
+        <label style="display: inline-block; width: 250px;">
+          <input 
+            type="checkbox" 
+            name="permissions_{{ group.id }}" 
+            value="{{ perm.id }}" 
+            {% if perm in group.permissions.all %}checked{% endif %}
+          >
+          {{ perm.name }}
+        </label>
+      {% endfor %}
+    </fieldset>
+  {% endfor %}
+
+  <button type="submit">Save Changes</button>
+</form>

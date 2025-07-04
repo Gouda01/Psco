@@ -1,0 +1,165 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Edit Role : {{ group.name }} {% endblock title %}
+
+
+{% block css %}
+
+
+{% endblock css %}
+    
+
+{% block content %}
+
+<!--begin::Main-->
+<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+	<!--begin::Content wrapper-->
+	<div class="d-flex flex-column flex-column-fluid">
+		
+		<!--begin::Content-->
+		<div id="kt_app_content" class="app-content flex-column-fluid">
+			<!--begin::Content container-->
+			<div id="kt_app_content_container" class="app-container container-xxl">
+				<!--begin::Card-->
+				<div class="card shadow-sm">
+					<div class="card-header">
+						<h3 class="card-title"> Edit Role : {{ group.name }} </h3>
+					
+					</div>
+					<div class="card-body">
+
+
+                        <form method="post">
+                            {% csrf_token %}
+
+                            <!--begin::Label-->
+                            <label class="required form-label">Role Name:</label><br>
+                            <!--end::Label-->
+                            <!--begin::Input-->
+                            <input class="form-control" name="group_name" value="{{ group.name }}" placeholder="Group Name:" required /><br><br>
+                            <!--end::Input-->
+
+                            {% comment %} <h5>Permissions:</h5>
+                            <div style="max-height: 600px; overflow-y: auto; border: 1px solid #ccc; border-radius: 7px; padding: 10px;">
+                                {% for perm in permissions %}
+                                    
+                                    <div class="form-check form-check-custom form-check-solid form-check-sm fs-4 py-2" style="display: inline-block; width: 32%;">
+                                        <input class="form-check-input" type="checkbox" name="permissions" value="{{ perm.id }}" id="flexRadioLg" {% if perm.id in group_permissions %}checked{% endif %} />
+                                        <label class="form-check-label" for="flexRadioLg">
+                                            {{ perm.name }}
+                                        </label>
+                                    </div>
+
+                                {% endfor %}
+                            </div> {% endcomment %}
+
+                            <h3>Permissions:</h3>
+                            <div style="border: 1px solid #ccc; border-radius: 7px; padding: 10px;">
+
+                                {% for group_name, perms in grouped_permissions.items %}
+                                <fieldset style="border: 1px solid #ccc; border-radius: 7px; padding: 10px;">
+                                    <legend><strong>{{ group_name }}</strong></legend>
+                                    <div class="row gy-4">
+                                        {% for perm in perms %}
+                                        <div class="col-6">
+                                            <div class="form-check form-check-custom form-check-solid form-check-sm">
+                                                <label class="form-check-label fs-3">
+                                                    <input type="checkbox" class="form-check-input" name="permissions" value="{{ perm.id }}"
+                                                    {% if perm.id in group_permissions %}checked{% endif %}>
+                                                    {{ perm.name }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </fieldset>
+                                {% endfor %}
+
+
+                            </div>
+                            <br>
+                            <!--begin::Button-->
+                            <button type="submit" class="btn btn-success">Update Role</button>
+                            <!--end::Button-->
+                        </form>
+                        
+						
+					</div>
+					
+				</div>
+				<!--end::Card-->
+			</div>
+			<!--end::Content container-->
+		</div>
+		<!--end::Content-->
+	</div>
+	<!--end::Content wrapper-->
+
+
+    <!--begin::Modals -->
+
+    
+
+    <!--end::Modals -->
+
+
+
+
+</div>
+<!--end:::Main-->
+
+    
+{% endblock content %}
+
+
+
+{% block js %}
+
+<script src="{% static 'assets/custom/js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'assets/plugins/custom/datatables/datatables.bundle.js' %}"></script>
+
+<script>
+    
+
+    $(document).ready(function () {
+        const table = $("#kt_datatable_dom_positioning");
+        
+    
+        table.DataTable({
+          
+          "language": {
+            "lengthMenu": "Show _MENU_",
+        },
+        "dom":
+            "<'row mb-2'" +
+            "<'col-sm-6 d-flex align-items-center justify-conten-start dt-toolbar'l>" +
+            "<'col-sm-6 d-flex align-items-center justify-content-end dt-toolbar'f>" +
+            ">" +
+    
+            "<'table-responsive'tr>" +
+    
+            "<'row'" +
+            "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+            "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+            ">"
+
+        });
+      });
+    
+    
+</script>
+
+
+<script>
+    
+
+</script>
+
+
+{% endblock js %}
+    
+
+
+    

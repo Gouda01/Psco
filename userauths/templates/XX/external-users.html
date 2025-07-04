@@ -1,0 +1,433 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} External Users List  {% endblock title %}
+
+
+{% block css %}
+
+<link href="{% static 'assets/plugins/custom/datatables/datatables.bundle.css' %}" rel="stylesheet" type="text/css"/>
+
+{% endblock css %}
+    
+
+{% block content %}
+
+<!--begin::Main-->
+<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+	<!--begin::Content wrapper-->
+	<div class="d-flex flex-column flex-column-fluid">
+		
+		<!--begin::Content-->
+		<div id="kt_app_content" class="app-content flex-column-fluid">
+			<!--begin::Content container-->
+			<div id="kt_app_content_container" class="app-container">
+				<!--begin::Card-->
+				<div class="card shadow-sm">
+					<div class="card-header">
+						<h3 class="card-title"> External Users List </h3>
+						<div class="card-toolbar">
+							
+                            {% if perms.userauths.add_user %}
+                            <!--begin::Primary button-->
+							<a href="#" class="btn btn-sm fw-bold btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_external_user">Add External User</a>
+							<!--end::Primary button-->
+                            {% endif %}
+
+                            
+						</div>
+					</div>
+					<div class="card-body">
+
+
+                        <div class="table-responsive">
+                            <table id="kt_datatable_dom_positioning" class="table table-striped table-bordered gy-5 gs-7 border rounded">
+                                <thead class="bg-light-primary">
+                                    <tr class="fw-bold fs-6 text-gray-800 px-7">
+                                        <th data-ordering="false">#</th>
+                                        <th data-ordering="false">External User Name</th>
+                                        <th data-ordering="false">Email</th>
+                                        <th data-ordering="false">Job</th>
+                                        <th data-ordering="false">Details</th>
+                                        {% if perms.settings.change_settings or perms.settings.delete_settings %}
+                                        <th style="width:15%;">Action</th>
+                                        {% endif %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in users %}
+                                    <tr>
+                                        
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ user.full_name }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.job|default_if_none:"" }}</td>
+                                        <td>{{ user.details|default_if_none:"" }}</td>
+                                        
+                                        {% if perms.settings.change_user or perms.settings.delete_suser %}
+                                        <td>
+                                        
+                                           {% if perms.userauths.change_user %}
+
+                                            <a href="#" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#kt_modal_edit_external_user"
+                                                data-id="{{ user.id }}" 
+                                                data-name="{{ user.full_name }}"
+                                                data-email="{{ user.email }}"
+                                                data-job="{{ user.job }}"
+                                                data-details="{{ user.details }}">Edit</a>
+
+                                            {% endif %}
+
+
+                                            {% if perms.userauths.delete_user %}
+
+                                            <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#kt_modal_delete_external_user"
+                                                data-id="{{ user.id }}" 
+                                                data-name="{{ user.full_name }}">Delete</a>
+                                            
+                                            {% endif %}
+
+
+                                        </td>
+                                        {% endif %}
+                                    </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+
+
+						
+					</div>
+					
+				</div>
+				<!--end::Card-->
+			</div>
+			<!--end::Content container-->
+		</div>
+		<!--end::Content-->
+	</div>
+	<!--end::Content wrapper-->
+
+
+    <!--begin::Modals -->
+
+    {% if perms.settings.add_user %}
+    <!--begin::Modal - Add External User-->
+    <div class="modal fade" id="kt_modal_add_external_user" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-900px">
+            <!--begin::Modal content-->
+            <div class="modal-content">
+                <!--begin::Modal header-->
+                <div class="modal-header">
+                    <!--begin::Modal title-->
+                    <h2>Add New External User</h2>
+                    <!--end::Modal title-->
+                    <!--begin::Close-->
+                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                        <i class="ki-duotone ki-cross fs-1">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                        </i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <!--end::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body py-lg-10 px-lg-10">
+                    
+                    <form class="form" action="{% url 'userauths:add-external-user' %}" method="post">
+                        {% csrf_token %}
+                    
+                        <div class="d-flex flex-column gap-5 gap-md-7">
+                            
+                            <!--begin::Input group-->
+                            <div class="d-flex flex-column flex-md-row gap-5">
+                                <div class="fv-row flex-row-fluid">
+                                    <!--begin::Label-->
+                                    <label class="required form-label">External User Name</label>
+                                    <!--end::Label-->
+                                    <!--begin::Input-->
+                                    <input class="form-control" name="name" placeholder="External User Name" required />
+                                    <!--end::Input-->
+                                </div>
+                                <div class="flex-row-fluid">
+                                    <!--begin::Label-->
+                                    <label class="required form-label">External User Email</label>
+                                    <!--end::Label-->
+                                    <!--begin::Input-->
+                                    <input type="email"  class="form-control" name="email" placeholder="External User Email" required />
+                                    <!--end::Input-->
+                                </div>
+
+                                <div class="flex-row-fluid">
+                                    <!--begin::Label-->
+                                    <label class="required form-label">External User Job</label>
+                                    <!--end::Label-->
+                                    <!--begin::Input-->
+                                    <input class="form-control" name="job" placeholder="External User Job" required />
+                                    <!--end::Input-->
+                                </div>
+                            </div>
+                            <!--end::Input group-->
+                            <!--begin::Input group-->
+                            <div class="d-flex flex-column flex-md-row gap-5">
+                                <div class="flex-row-fluid">
+                                    <!--begin::Label-->
+                                    <label class="form-label">Details</label>
+                                    <!--end::Label-->
+                                    <!--begin::Input-->
+                                    <textarea class="form-control" rows="3" name="details"></textarea>
+                                    <!--end::Input-->
+                                </div>
+                                
+                            </div>
+                            <!--end::Input group-->
+
+                            <div class="d-flex justify-content-end">
+                                <!--begin::Button-->
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <!--end::Button-->
+                                <!--begin::Button-->
+                                <button type="submit" class="btn btn-success">Save</button>
+                                <!--end::Button-->
+                            </div>
+                            
+                        </div>
+                    
+                    </form>
+
+                </div>
+                <!--end::Modal body-->
+            </div>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+    <!--end::Modal - Add External User -->
+    {% endif %}
+
+
+    {% if perms.userauths.change_user %}
+    <!--begin::Modal - Edit External User-->
+    <div class="modal fade" id="kt_modal_edit_external_user" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-900px">
+            <!--begin::Modal content-->
+            <div class="modal-content">
+                <!--begin::Modal header-->
+                <div class="modal-header">
+                    <!--begin::Modal title-->
+                    <h2>Edit External User</h2>
+                    <!--end::Modal title-->
+                    <!--begin::Close-->
+                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                        <i class="ki-duotone ki-cross fs-1">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                        </i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <!--end::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body py-lg-10 px-lg-10">
+                    
+                    <form class="form" action="{% url 'userauths:edit-external-user' %}" method="post">
+                        {% csrf_token %}
+                    
+                        <div class="d-flex flex-column gap-5 gap-md-7">
+                            
+                            <!--begin::Input group-->
+                            <div class="d-flex flex-column flex-md-row gap-5">
+                                <div class="fv-row flex-row-fluid">
+                                    <!--begin::Label-->
+                                    <label class="required form-label">External User Name</label>
+                                    <!--end::Label-->
+                                    <!--begin::Input-->
+                                    <input class="form-control" name="name" id="name" placeholder="External User Name" required />
+                                    <input class="form-control" type="hidden"  name="id" id="id" placeholder="External User Name" required />
+                                    <!--end::Input-->
+                                </div>
+                                <div class="flex-row-fluid">
+                                    <!--begin::Label-->
+                                    <label class="required form-label">External User Email</label>
+                                    <!--end::Label-->
+                                    <!--begin::Input-->
+                                    <input type="email" class="form-control" name="email" id="email" placeholder="External User Email" required />
+                                    <!--end::Input-->
+                                </div>
+
+                                <div class="flex-row-fluid">
+                                    <!--begin::Label-->
+                                    <label class="required form-label">External User Job</label>
+                                    <!--end::Label-->
+                                    <!--begin::Input-->
+                                    <input class="form-control" name="job" id="job" placeholder="External User Job" required />
+                                    <!--end::Input-->
+                                </div>
+                            </div>
+                            <!--end::Input group-->
+                            <!--begin::Input group-->
+                            <div class="d-flex flex-column flex-md-row gap-5">
+                                <div class="flex-row-fluid">
+                                    <!--begin::Label-->
+                                    <label class="form-label">Details</label>
+                                    <!--end::Label-->
+                                    <!--begin::Input-->
+                                    <textarea class="form-control" rows="3" name="details" id="details"></textarea>
+                                    <!--end::Input-->
+                                </div>
+                                
+                            </div>
+                            <!--end::Input group-->
+
+                            <div class="d-flex justify-content-end">
+                                <!--begin::Button-->
+                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                <!--end::Button-->
+                                <!--begin::Button-->
+                                <button type="submit" class="btn btn-success">Save</button>
+                                <!--end::Button-->
+                            </div>
+                            
+                        </div>
+                    
+                    </form>
+
+                </div>
+                <!--end::Modal body-->
+            </div>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+    <!--end::Modal - Edit External User -->
+    {% endif %}
+
+
+    {% if perms.settings.delete_settings %}
+    <!--begin::Modal - Delete External User-->
+    <div class="modal fade" tabindex="-1" id="kt_modal_delete_external_user">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Delete External User</h3>
+    
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                
+                <form action="{% url 'userauths:delete-external-user' %}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <p class="text-danger fs-25"> Are You Sure To Delete External User :  </p>
+                            <!--begin::Input-->
+                            <input class="form-control form-control-solid" name="name" id="name"  readonly required />
+                            <input class="form-control" type="hidden"  name="id" id="id" placeholder="External User Name" required />
+                            <!--end::Input-->
+                    </div>
+        
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger">Confirm Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--end::Modal - Delete External User -->
+    {% endif %}
+
+    <!--end::Modals -->
+
+
+
+
+</div>
+<!--end:::Main-->
+
+    
+{% endblock content %}
+
+
+
+{% block js %}
+
+<script src="{% static 'assets/custom/js/jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'assets/plugins/custom/datatables/datatables.bundle.js' %}"></script>
+
+<script>
+    
+
+    $(document).ready(function () {
+        const table = $("#kt_datatable_dom_positioning");
+        
+    
+        table.DataTable({
+          
+          "language": {
+            "lengthMenu": "Show _MENU_",
+        },
+        "dom":
+            "<'row mb-2'" +
+            "<'col-sm-6 d-flex align-items-center justify-conten-start dt-toolbar'l>" +
+            "<'col-sm-6 d-flex align-items-center justify-content-end dt-toolbar'f>" +
+            ">" +
+    
+            "<'table-responsive'tr>" +
+    
+            "<'row'" +
+            "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+            "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+            ">"
+
+        });
+      });
+    
+    
+</script>
+
+<script>
+    $('#kt_modal_edit_external_user').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        var name = button.data('name')
+        var email = button.data('email')
+        var job = button.data('job')
+        var details = button.data('details')
+        
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+        modal.find('.modal-body #name').val(name);
+        modal.find('.modal-body #email').val(email);
+        modal.find('.modal-body #job').val(job);
+        modal.find('.modal-body #details').val(details);
+     
+    });
+
+    $('#kt_modal_delete_external_user').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        var name = button.data('name')
+        
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+        modal.find('.modal-body #name').val(name);
+     
+    });
+
+</script>
+
+{% endblock js %}
+    
+
+
+    

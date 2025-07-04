@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Add User {% endblock title %}
+
+
+{% block css %}
+    
+{% endblock css %}
+    
+
+{% block content %}
+
+<div class="page-content">
+    <div class="container-fluid">
+
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <h4 class="mb-sm-0"> Add User </h4>
+
+                    <div class="page-title-right">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+            
+            <div class="col-xxl-12">
+                
+                <form action="{% url 'userauths:save-user' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                
+                    <div class="card border">
+                        <div class="card-header align-items-center d-flex bg-opacity-75 bg-primary">
+                            <h4 class="card-title mb-0 flex-grow-1 text-light"> Main Data </h4>
+                            
+                        </div><!-- end card header -->
+
+                        <div class="card-body">
+                            <div class="live-preview">
+                                <div class="row gy-4">
+                                    <div class="col-xxl-8 col-md-8">
+                                        <div>
+                                            <label for="basiInput" class="form-label"> Full Name </label>
+                                            <input type="text" class="form-control" name="full_name" required>
+                                        </div>
+                                    </div>
+                                    <!--end col-->
+
+                                    <div class="col-xxl-4 col-md-4">
+                                        <label for="basiInput" class="form-label">Department</label>
+                                        <select class="form-control" name="department_id" required>
+                                            <option value="" disabled selected>Choose Department</option>
+                                            {% for department in departments %}
+                                            <option value="{{ department.id }}">{{ department }}</option>
+                                            {% endfor %}
+
+                                        </select>
+                                    </div>
+                                    <!--end col-->
+
+
+                                    <div class="col-xxl col-md">
+                                        <label for="basiInput" class="form-label">Roles</label>
+                                        <select class="form-control" name="group_id" required>
+                                            <option value="" disabled selected>Choose Roles</option>
+                                            {% for group in groups %}
+                                            <option value="{{ group.id }}">{{ group }}</option>
+                                            {% endfor %}
+
+                                        </select>
+                                    </div>
+                                    <!--end col-->
+
+
+                                    <div class="col-xxl col-md">
+                                        <div>
+                                            <label for="labelInput" class="form-label">Job</label>
+                                            <input type="text" class="form-control" name="job" id="job" required>
+                                            <p id="errorMessage"></p>
+                                        </div>
+                                    </div>
+                                    <!--end col-->
+
+                                    <div class="col-xxl col-md">
+                                        <div>
+                                            <label for="labelInput" class="form-label">Email</label>
+                                            <input type="email" class="form-control" name="email" id="email">
+                                            <p id="errorMessage"></p>
+                                        </div>
+                                    </div>
+                                    <!--end col-->
+
+                                    {% comment %} <div class="col-xxl col-md">
+                                        <div>
+                                            <label for="labelInput" class="form-label"> الصورة </label>
+                                            <input class="form-control" type="file" name="image" accept=".jpeg,.png,.jpg">
+                                        </div>
+                                    </div>
+                                    <!--end col--> {% endcomment %}
+                                    
+
+                                    <div class="col-xxl-12 col-md-12">
+                                        <div>
+                                            <label for="labelInput" class="form-label">Details</label>
+                                            <textarea class="form-control" name="details" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <!--end col-->
+                                    
+                                    
+                                </div>
+                                <!--end row-->
+                            </div>
+
+
+
+                            
+                        </div>
+                    </div>
+
+                    <div class="card border">
+                        <div class="card-header align-items-center d-flex bg-opacity-75 bg-primary">
+                            <h4 class="card-title mb-0 flex-grow-1 text-light">Login To System Data</h4>
+                            
+                        </div><!-- end card header -->
+
+                        <div class="card-body">
+                            <div class="live-preview">
+                                <div class="row gy-4">
+                                    <div class="col-xxl col-md">
+                                        <div>
+                                            <label for="basiInput" class="form-label">Username</label>
+                                            <input type="text" class="form-control" name="username" required>
+                                        </div>
+                                    </div>
+                                    <!--end col-->
+                                    
+                                    <div class="col-xxl col-md">
+                                        <div>
+                                            <label for="labelInput" class="form-label">Password</label>
+                                            <input type="password" class="form-control" name="password1" required>
+                                        </div>
+                                    </div>
+                                    <!--end col-->
+                                    <div class="col-xxl col-md">
+                                        <div>
+                                            <label for="labelInput" class="form-label">Confirm Password</label>
+                                            <input type="password" class="form-control" name="password2" required>
+                                        </div>
+                                    </div>
+                                    <!--end col-->
+                                    <div class="col-xxl col-md">
+                                        <div>
+                                            <label for="labelInput" class="form-label">Account Status</label>
+                                            <select class="form-select" name="active" required>
+                                                <option selected value="True">Active</option>
+                                                <option value="False">Deactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--end col-->
+
+                                    <div class="col-xxl-12 col-md-12">
+                                        <div>
+                                            <button type="submit" class="btn btn-success waves-effect waves-light">Save</button>
+                                        </div>
+                                    </div>
+                                    <!--end col-->
+                                    
+                                </div>
+                                <!--end row-->
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                </form>
+
+            </div><!-- end col -->
+        </div><!-- end row -->
+
+    </div>
+</div>
+<!-- container-fluid -->
+
+
+    
+{% endblock content %}
+
+
+{% block js %}
+
+
+{% endblock js %}
+    

@@ -1,0 +1,355 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Edit User : {{ user.full_name }}  {% endblock title %}
+
+
+{% block css %}
+
+
+{% endblock css %}
+    
+
+{% block content %}
+
+<!--begin::Main-->
+<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+	<!--begin::Content wrapper-->
+	<div class="d-flex flex-column flex-column-fluid">
+		
+		<!--begin::Content-->
+		<div id="kt_app_content" class="app-content flex-column-fluid">
+			<!--begin::Content container-->
+			<div id="kt_app_content_container" class="app-container">
+				<!--begin::Card-->
+				<div class="card shadow-sm">
+					<div class="card-header bg-light-info">
+						<h3 class="card-title"> Edit My Personal data </h3>
+						
+					</div>
+					<div class="card-body">
+
+                        
+
+                        <!--begin::Basic info-->
+                        <div class="card mb-5 mb-xl-10">
+                            <!--begin::Card header-->
+                            <div class="card-header border-0 cursor-pointer bg-light-success" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bold m-0">Profile Details For user : <span class="text-danger">{{request.user.username}}</span></h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <!--begin::Card header-->
+                            <!--begin::Content-->
+                            <div id="kt_account_settings_profile_details" class="collapse show">
+                                <!--begin::Form-->
+                                <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+
+                                    <!--begin::Card body-->
+                                    <div class="card-body border-top p-9">
+                                        
+                                        <!--begin::Input group-->
+                                        <div class="row mb-6">
+                                            <!--begin::Label-->
+                                            <label class="col-lg-3 col-form-label fw-semibold fs-6">Image</label>
+                                            <!--end::Label-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-9">
+                                                <!--begin::Image input-->
+                                                <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url('{% static 'assets/media/svg/avatars/blank.svg' %}')">
+                                                    <!--begin::Preview existing avatar-->
+                                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url({{ request.user.image.url }})"></div>
+                                                    <!--end::Preview existing avatar-->
+                                                    <!--begin::Label-->
+                                                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
+                                                        <i class="ki-duotone ki-pencil fs-7">
+                                                            <span class="path1"></span>
+                                                            <span class="path2"></span>
+                                                        </i>
+                                                        <!--begin::Inputs-->
+                                                        <input type="file" name="image" accept=".png, .jpg, .jpeg" />
+                                                        <input type="hidden" name="image1" />
+                                                        <!--end::Inputs-->
+                                                    </label>
+                                                    <!--end::Label-->
+                                                    <!--begin::Cancel-->
+                                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel avatar">
+                                                        <i class="ki-duotone ki-cross fs-2">
+                                                            <span class="path1"></span>
+                                                            <span class="path2"></span>
+                                                        </i>
+                                                    </span>
+                                                    <!--end::Cancel-->
+                                                    
+                                                </div>
+                                                <!--end::Image input-->
+                                                <!--begin::Hint-->
+                                                <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
+                                                <!--end::Hint-->
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Input group-->
+                                        <!--begin::Input group-->
+                                        <div class="row mb-6">
+                                            <!--begin::Label-->
+                                            <label class="col-lg-3 col-form-label required fw-semibold fs-6">Full Name</label>
+                                            <!--end::Label-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-9">
+                                                <!--begin::Row-->
+                                                <div class="row">
+                                                    <!--begin::Col-->
+                                                    <div class="col-lg-12 fv-row">
+                                                        <input type="text" name="full_name" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Full name" value="{{ request.user.full_name }}" required/>
+                                                        <input type="hidden" name="the_data" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" value="personal" required/>
+                                                    </div>
+                                                    <!--end::Col-->
+                                                    
+                                                </div>
+                                                <!--end::Row-->
+                                            </div>
+                                            <!--end::Col-->
+                                            
+                                        </div>
+                                        <!--end::Input group-->
+                                        <!--begin::Input group-->
+                                        <div class="row mb-6">
+                                            <!--begin::Label-->
+                                            <label class="col-lg-3 col-form-label required fw-semibold fs-6">Job</label>
+                                            <!--end::Label-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-9 fv-row">
+                                                <input type="text" name="job" class="form-control form-control-lg form-control-solid" placeholder="Enter Job" value="{{ request.user.job }}" required/>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Input group-->
+                                        
+                                        <!--begin::Input group-->
+                                        <div class="row mb-6">
+                                            <!--begin::Label-->
+                                            <label class="col-lg-3 col-form-label required fw-semibold fs-6">Email</label>
+                                            <!--end::Label-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-9 fv-row">
+                                                <input type="email" name="email" class="form-control form-control-lg form-control-solid" placeholder="Enter Email" value="{{ request.user.email }}" required />
+                                            </div>
+                                            <!--end::Col-->
+                                            
+                                            
+                                        </div>
+                                        <!--end::Input group-->
+
+                                        <!--begin::Input group-->
+                                        <div class="row mb-6">
+                                            <!--begin::Label-->
+                                            <label class="col-lg-3 col-form-label required fw-semibold fs-6">Phone</label>
+                                            <!--end::Label-->
+                                            
+                                            <!--begin::Col-->
+                                            <div class="col-lg-9 fv-row">
+                                                <input type="phone" name="phone" class="form-control form-control-lg form-control-solid" placeholder="Enter Phone" value="{{ request.user.phone }}" required />
+                                            </div>
+                                            <!--end::Col-->
+                                            
+                                        </div>
+                                        <!--end::Input group-->
+
+
+
+                                    </div>
+                                    <!--end::Card body-->
+                                    <!--begin::Actions-->
+                                    <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                        <button type="submit" class="btn btn-primary" >Save Changes</button>
+                                    </div>
+                                    <!--end::Actions-->
+                                </form>
+                                <!--end::Form-->
+                            </div>
+                            <!--end::Content-->
+                        </div>
+                        <!--end::Basic info-->
+
+
+                        <!--begin::Card-->
+                        <div class="card shadow-sm">
+                            
+                            <!--begin::Accordion-->
+                            <div class="accordion" id="kt_accordion_1">
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="kt_accordion_1_header_2">
+                                        <button class="accordion-button fs-4 fw-semibold collapsed bg-light-success" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body" aria-expanded="false" aria-controls="kt_accordion_1_body">
+                                            Change Password
+                                        </button>
+                                    </h2>
+                                    <div id="kt_accordion_1_body" class="accordion-collapse collapse" aria-labelledby="kt_accordion_1_header_2" data-bs-parent="#kt_accordion_1">
+                                        <div class="accordion-body">
+
+                                            <!--begin::Form-->
+                                            <form method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                                
+                                                <!--begin::Input group-->
+                                                <div class="row mb-6">
+                                                    
+                                                    <!--begin::Col-->
+                                                    <div class="col-lg-4">
+                                                        <!--begin::Row-->
+                                                        <div class="row">
+                                                            <!--begin::Col-->
+                                                            <div class="col-lg-12 fv-row">
+                                                                <input type="password" name="current_password" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Current Password" required />
+                                                                <input type="hidden" name="the_data" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" value="security" required />
+                                                            </div>
+                                                            <!--end::Col-->
+                                                            
+                                                        </div>
+                                                        <!--end::Row-->
+                                                    </div>
+                                                    <!--end::Col-->
+                                                    
+
+                                                    <!--begin::Col-->
+                                                    <div class="col-lg-4">
+                                                        <!--begin::Row-->
+                                                        <div class="row">
+                                                            <!--begin::Col-->
+                                                            <div class="col-lg-12 fv-row">
+                                                                <input type="password" name="password1" id="password1" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="New Password" required />
+                                                            </div>
+                                                            <!--end::Col-->
+                                                            
+                                                        </div>
+                                                        <!--end::Row-->
+                                                    </div>
+                                                    <!--end::Col-->
+
+                                                    <!--begin::Col-->
+                                                    <div class="col-lg-4">
+                                                        <!--begin::Row-->
+                                                        <div class="row">
+                                                            <!--begin::Col-->
+                                                            <div class="col-lg-12 fv-row">
+                                                                <input type="password" name="password2" id="password2" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Confirm Password" required />
+                                                            </div>
+                                                            <!--end::Col-->
+                                                            
+                                                        </div>
+                                                        <!--end::Row-->
+                                                    </div>
+                                                    <!--end::Col-->
+                                                    
+                                                </div>
+                                                <!--end::Input group-->
+
+                                                <p id="passwordFeedback" style="color: red;"></p>
+                                                
+                                                <!--begin::Actions-->
+                                                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Update Password</button>
+                                                </div>
+                                                <!--end::Actions-->
+                                            </form>
+                                            <!--end::Form-->
+
+                                        </div>
+                                    </div>
+                                </div>
+                                
+
+                            </div>
+                            <!--end::Accordion-->
+                            
+                        </div>
+                        <!--end::Card-->
+
+
+
+						
+					</div>
+					
+				</div>
+				<!--end::Card-->
+			</div>
+			<!--end::Content container-->
+		</div>
+		<!--end::Content-->
+	</div>
+	<!--end::Content wrapper-->
+
+
+    <!--begin::Modal - Delete User-->
+   
+    <!--end::Modal - Delete User -->
+
+    <!--end::Modals -->
+
+
+
+
+</div>
+<!--end:::Main-->
+
+    
+{% endblock content %}
+
+
+
+{% block js %}
+
+
+<script>
+    const password1 = document.getElementById('password1');
+    const password2 = document.getElementById('password2');
+    const submitBtn = document.getElementById('submitBtn');
+    const feedback = document.getElementById('passwordFeedback');
+
+    function validatePasswords() {
+        const pass1 = password1.value;
+        const pass2 = password2.value;
+
+        if (pass1.length < 6) {
+            feedback.textContent = "New Password must be at least 6 characters.";
+            setStyles('invalid');
+            submitBtn.disabled = true;
+        } else if (pass1 !== pass2) {
+            feedback.textContent = "New Passwords does not the same";
+            setStyles('invalid');
+            submitBtn.disabled = true;
+        } else {
+            feedback.textContent = "Passwords match and are valid.";
+            feedback.style.color = "green";
+            setStyles('valid');
+            submitBtn.disabled = false;
+        }
+    }
+
+    function setStyles(status) {
+        if (status === 'valid') {
+            password1.style.border = "2px solid green";
+            password2.style.border = "2px solid green";
+        } else {
+            password1.style.border = "2px solid red";
+            password2.style.border = "2px solid red";
+            feedback.style.color = "red";
+        }
+    }
+
+    password1.addEventListener('input', validatePasswords);
+    password2.addEventListener('input', validatePasswords);
+</script>
+
+
+{% endblock js %}
+    
+
+
+    

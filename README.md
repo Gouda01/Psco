@@ -1,2 +1,2 @@
-# psco
-Power Supply Company App
+# AAS
+Alex. Accounting System

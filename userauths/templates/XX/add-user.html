@@ -1,0 +1,251 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Add User  {% endblock title %}
+
+
+{% block css %}
+
+
+{% endblock css %}
+    
+
+{% block content %}
+
+<!--begin::Main-->
+<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
+	<!--begin::Content wrapper-->
+	<div class="d-flex flex-column flex-column-fluid">
+		
+		<!--begin::Content-->
+		<div id="kt_app_content" class="app-content flex-column-fluid">
+			<!--begin::Content container-->
+			<div id="kt_app_content_container" class="app-container">
+				<!--begin::Card-->
+				<div class="card shadow-sm">
+					<div class="card-header">
+						<h3 class="card-title"> Add User </h3>
+						
+					</div>
+					<div class="card-body">
+
+                        {% if perms.userauths.add_user %}
+                        <form action="{% url 'userauths:save-user' %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                        
+                            <div class="card border">
+                                <div class="card-header align-items-center d-flex bg-opacity-75 bg-primary">
+                                    <h4 class="card-title text-light"> Main Data </h4>
+                                    
+                                </div><!-- end card header -->
+        
+                                <div class="card-body">
+                                    <div class="live-preview">
+                                        <div class="row gy-4">
+                                            <div class="col-xxl-8 col-md-8">
+                                                <div>
+                                                    <label for="basiInput" class="form-label"> Full Name </label>
+                                                    <input type="text" class="form-control" name="full_name" required>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+        
+                                            <div class="col-xxl-4 col-md-4">
+                                                <label for="basiInput" class="form-label">Department</label>
+                                                <select class="form-control" name="department_id" required>
+                                                    <option value="" disabled selected>Choose Department</option>
+                                                    {% for department in departments %}
+                                                    <option value="{{ department.id }}">{{ department }}</option>
+                                                    {% endfor %}
+        
+                                                </select>
+                                            </div>
+                                            <!--end col-->
+        
+        
+                                            <div class="col-xxl-3 col-md-3">
+                                                <label for="basiInput" class="form-label">Roles</label>
+                                                <select class="form-control" name="group_id" required>
+                                                    <option value="" disabled selected>Choose Roles</option>
+                                                    {% for group in groups %}
+                                                    <option value="{{ group.id }}">{{ group }}</option>
+                                                    {% endfor %}
+        
+                                                </select>
+                                            </div>
+                                            <!--end col-->
+
+                                            <div class="col-xxl-3 col-md-3">
+                                                <div>
+                                                    <label for="labelInput" class="form-label">Mobile / Whats App</label>
+                                                    <input type="text" class="form-control" name="phone" id="phoneInput" maxlength="11">
+                                                    <p class="fs-6" id="errorMessage"></p>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+        
+        
+                                            <div class="col-xxl-3 col-md-3">
+                                                <div>
+                                                    <label for="labelInput" class="form-label">Job</label>
+                                                    <input type="text" class="form-control" name="job" id="job" required>
+                                                    <p id="errorMessage"></p>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+        
+                                            <div class="col-xxl-3 col-md-3">
+                                                <div>
+                                                    <label for="labelInput" class="form-label">Email</label>
+                                                    <input type="email" class="form-control" name="email" id="email">
+                                                    <p id="errorMessage"></p>
+                                                </div>
+                                            </div>
+        
+                                            {% comment %} <div class="col-xxl col-md">
+                                                <div>
+                                                    <label for="labelInput" class="form-label"> الصورة </label>
+                                                    <input class="form-control" type="file" name="image" accept=".jpeg,.png,.jpg">
+                                                </div>
+                                            </div>
+                                            <!--end col--> {% endcomment %}
+                                            
+        
+                                            <div class="col-xxl-12 col-md-12">
+                                                <div>
+                                                    <label for="labelInput" class="form-label">Details</label>
+                                                    <textarea class="form-control" name="details" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                            
+                                            
+                                        </div>
+                                        <!--end row-->
+                                    </div>
+        
+        
+        
+                                    
+                                </div>
+                            </div>
+        
+                            <div class="card border">
+                                <div class="card-header align-items-center d-flex bg-opacity-75 bg-primary">
+                                    <h4 class="card-title text-light">Login To System Data</h4>
+                                    
+                                </div><!-- end card header -->
+        
+                                <div class="card-body">
+                                    <div class="live-preview">
+                                        <div class="row gy-4">
+                                            <div class="col-xxl col-md">
+                                                <div>
+                                                    <label for="basiInput" class="form-label">Username</label>
+                                                    <input type="text" class="form-control" name="username" required>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                            
+                                            <div class="col-xxl col-md">
+                                                <div>
+                                                    <label for="labelInput" class="form-label">Password</label>
+                                                    <input type="password" class="form-control" name="password1" required>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                            <div class="col-xxl col-md">
+                                                <div>
+                                                    <label for="labelInput" class="form-label">Confirm Password</label>
+                                                    <input type="password" class="form-control" name="password2" required>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                            <div class="col-xxl col-md">
+                                                <div>
+                                                    <label for="labelInput" class="form-label">Account Status</label>
+                                                    <select class="form-select" name="active" required>
+                                                        <option selected value="True">Active</option>
+                                                        <option value="False">Deactive</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+        
+                                            <div class="col-xxl-12 col-md-12">
+                                                <div>
+                                                    <button type="submit" class="btn btn-success waves-effect waves-light">Save</button>
+                                                </div>
+                                            </div>
+                                            <!--end col-->
+                                            
+                                        </div>
+                                        <!--end row-->
+                                    </div>
+                                    
+                                </div>
+                            </div>
+        
+                        </form>
+
+                        {% endif %}
+
+
+						
+					</div>
+					
+				</div>
+				<!--end::Card-->
+			</div>
+			<!--end::Content container-->
+		</div>
+		<!--end::Content-->
+	</div>
+	<!--end::Content wrapper-->
+
+
+    <!--begin::Modal - Delete User-->
+   
+    <!--end::Modal - Delete User -->
+
+    <!--end::Modals -->
+
+
+
+
+</div>
+<!--end:::Main-->
+
+    
+{% endblock content %}
+
+
+
+{% block js %}
+
+<script>
+    document.getElementById('phoneInput').addEventListener('input', function() {
+    const input = this.value;
+    const errorMessage = document.getElementById('errorMessage');
+ 
+    // Check if input contains only numbers and is exactly 14 digits long
+    const regex = /^\d{11}$/;
+    
+    if (regex.test(input)) {
+        errorMessage.textContent = '';
+        this.style.borderColor = '';
+    } else {
+        errorMessage.textContent = 'Phone must be 11 numbers';
+        errorMessage.style.color = 'red';
+        this.style.borderColor = 'red';
+    }
+});
+</script>
+
+{% endblock js %}
+    
+
+
+    
