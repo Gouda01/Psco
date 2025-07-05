@@ -7,9 +7,6 @@ from settings.models import Management
 
 # Create your views here.
 
-def home (request) :
-    return render (request, 'home.html')
-
 
 # Managements
 @login_required

@@ -27,10 +27,11 @@ from settings.views import home
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('', login_required(home), name='home'),
+    # path('', login_required(home), name='home'),
 
     path('userauths/', include('userauths.urls')),
     path('settings/', include('settings.urls')),
+    path('', include('dashboard.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
