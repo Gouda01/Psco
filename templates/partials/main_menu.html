@@ -1,4 +1,5 @@
 
+{% load static %}
 <!--begin::Aside-->
 <div id="kt_aside" class="aside aside-dark aside-hoverable" data-kt-drawer="true" data-kt-drawer-name="aside" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle">
     
@@ -6,8 +7,8 @@
     <!--begin::Brand-->
     <div class="aside-logo flex-column-auto" id="kt_aside_logo">
         <!--begin::Logo-->
-        <a href="index.html">
-            <img alt="Logo" src="assets/media/logos/demo13.svg" class="h-15px logo" />
+        <a href="{% url 'dashboard:dashboard' %}">
+            <img alt="Logo" src="{% static 'assets/media/logos/Logo.png' %}" class="h-40px logo" />
         </a>
         <!--end::Logo-->
         <!--begin::Aside toggler-->
@@ -40,7 +41,8 @@
                 <!--begin:Menu item-->
                 <div class="menu-item">
                     <!--begin:Menu link-->
-                    <a class="menu-link" href="apps/calendar.html">
+                    {% url 'dashboard:dashboard' as dashboard_url %}
+                    <a class="menu-link {% if request.path == dashboard_url %}active{% endif %}" href="{{ dashboard_url }}">
                         <span class="menu-icon">
                             <i class="ki-outline ki-calendar-8 fs-2"></i>
                         </span>
@@ -51,10 +53,11 @@
                 <!--end:Menu item-->
                 
                 
+                
+
+
                 <!--begin:Menu item-->
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                    
-
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
@@ -70,7 +73,8 @@
                         <!--begin:Menu item-->
                         <div class="menu-item">
                             <!--begin:Menu link-->
-                            <a class="menu-link" href="{% url 'userauths:users' %}">
+                            {% url 'userauths:users' as all_users_url %}
+                            <a class="menu-link {% if request.path == all_users_url %}active{% endif %}" href="{{ all_users_url }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
@@ -83,7 +87,8 @@
                         <!--begin:Menu item-->
                         <div class="menu-item">
                             <!--begin:Menu link-->
-                            <a class="menu-link" href="account/overview.html">
+                            {% url 'userauths:add-user' as add_user_url %}
+                            <a class="menu-link {% if request.path == add_user_url %}active{% endif %}" href="{{ add_user_url }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
@@ -119,7 +124,8 @@
                         <!--begin:Menu item-->
                         <div class="menu-item">
                             <!--begin:Menu link-->
-                            <a class="menu-link" href="{% url 'settings:managements-list' %}">
+
+                            <a class="menu-link " href="#">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
@@ -129,18 +135,7 @@
                         </div>
                         <!--end:Menu item-->
                         
-                        <!--begin:Menu item-->
-                        <div class="menu-item">
-                            <!--begin:Menu link-->
-                            <a class="menu-link" href="account/overview.html">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">القطاعات</span>
-                            </a>
-                            <!--end:Menu link-->
-                        </div>
-                        <!--end:Menu item-->
+                        
                         
                         
                     </div>
@@ -148,80 +143,6 @@
                 </div>
                 <!--end:Menu item-->
 
-
-
-                <!--begin:Menu item-->
-                <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                    
-
-                    <!--begin:Menu link-->
-                    <span class="menu-link">
-                        <span class="menu-icon">
-                            <i class="ki-outline ki-element-plus fs-2"></i>
-                        </span>
-                        <span class="menu-title">Account</span>
-                        <span class="menu-arrow"></span>
-                    </span>
-                    <!--end:Menu link-->
-                    <!--begin:Menu sub-->
-                    <div class="menu-sub menu-sub-accordion">
-                        
-                        <!--begin:Menu item-->
-                        <div class="menu-item">
-                            <!--begin:Menu link-->
-                            <a class="menu-link active" href="apps/customers/getting-started.html">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Getting Started</span>
-                            </a>
-                            <!--end:Menu link-->
-                        </div>
-                        <!--end:Menu item-->
-                        
-                        <!--begin:Menu item-->
-                        <div class="menu-item">
-                            <!--begin:Menu link-->
-                            <a class="menu-link" href="account/overview.html">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Overview</span>
-                            </a>
-                            <!--end:Menu link-->
-                        </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div class="menu-item">
-                            <!--begin:Menu link-->
-                            <a class="menu-link" href="account/settings.html">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Settings</span>
-                            </a>
-                            <!--end:Menu link-->
-                        </div>
-                        <!--end:Menu item-->
-                        
-                    </div>
-                    <!--end:Menu sub-->
-                </div>
-                <!--end:Menu item-->
-                
-                
-                <!--begin:Menu item-->
-                <div class="menu-item">
-                    <!--begin:Menu link-->
-                    <a class="menu-link" href="apps/calendar.html">
-                        <span class="menu-icon">
-                            <i class="ki-outline ki-calendar-8 fs-2"></i>
-                        </span>
-                        <span class="menu-title">Calendar</span>
-                    </a>
-                    <!--end:Menu link-->
-                </div>
-                <!--end:Menu item-->
 
                 
             </div>
@@ -233,10 +154,10 @@
 
     <!--begin::Footer-->
     <div class="aside-footer flex-column-auto pb-7 px-5" id="kt_aside_footer">
-        <a href="https://preview.keenthemes.com/html/metronic/docs" class="btn btn-custom btn-primary w-100" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss-="click" title="200+ in-house components and 3rd-party plugins">
+        {% comment %} <a href="https://preview.keenthemes.com/html/metronic/docs" class="btn btn-custom btn-primary w-100" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss-="click" title="200+ in-house components and 3rd-party plugins">
             <span class="btn-label">Docs & Components</span>
             <i class="ki-outline ki-document btn-icon fs-2"></i>
-        </a>
+        </a> {% endcomment %}
     </div>
     <!--end::Footer-->
 </div>

@@ -10,10 +10,10 @@ app_name = "dashboard"
 urlpatterns = [
     
     # Website :
-    path('',login_required(views.website),name='website'),
+    path('',views.website,name='website'),
     
     #Dashboard :
-    # path('managements-list/',login_required(views.managements_view),name='managements-list'),
+    path('dashboard/',login_required(views.dashboard),name='dashboard'),
     
 
     

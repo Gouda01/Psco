@@ -9,6 +9,19 @@
                 
                 
                 <!--begin:Menu item-->
+                <div class="menu-item here me-0 me-lg-2">
+                    <!--begin:Menu link-->
+                    <span class="menu-link py-3">
+                        <a href="{% url 'dashboard:dashboard' %}">
+                            <span class="menu-title">اللوحة الرئيسية</span>
+                        </a>
+                    </span>
+                    <!--end:Menu link-->
+                </div>
+                <!--end:Menu item-->
+                
+
+                <!--begin:Menu item-->
                 <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-end" class="menu-item here show menu-lg-down-accordion menu-sub-lg-down-indention me-0 me-lg-2">
                     <!--begin:Menu link-->
                     <span class="menu-link py-3">
@@ -197,7 +210,12 @@
                 <!--end::Menu item-->
                 <!--begin::Menu item-->
                 <div class="menu-item px-5">
-                    <a href="authentication/layouts/corporate/sign-in.html" class="menu-link px-5">Sign Out</a>
+                    {% comment %} <a href="authentication/layouts/corporate/sign-in.html" class="menu-link px-5">Sign Out</a> {% endcomment %}
+                    <form action="{% url 'userauths:logout' %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn menu-link px-5" type="submit"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i><span class="align-middle" data-key="t-logout">تسجيل الخروج</span></button>
+                        {% comment %} <a href="#" class="btn menu-link px-5" type="submit">Sign Out</a> {% endcomment %}
+                    </form>
                 </div>
                 <!--end::Menu item-->
             </div>
