@@ -29,7 +29,8 @@ class CashTransaction(models.Model):
     type = models.CharField(max_length=10, choices=TRANSACTION_TYPES)
     category = models.ForeignKey(CashCategory, on_delete=models.SET_NULL, null=True, blank=True)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    description = models.TextField(blank=True)
+    description = models.CharField(max_length=1000)
+    receipt = models.CharField(max_length=50, null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     date = models.DateField(auto_now_add=True)
 

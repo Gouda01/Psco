@@ -1,0 +1,436 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} بيانات بنود ايرادات ومصروفات {% endblock title %}
+
+
+{% block css %}
+
+<link href="{% static 'assets/plugins/custom/datatables/datatables.bundle.css' %}" rel="stylesheet" type="text/css"/>
+
+{% endblock css %}
+    
+
+{% block content %}
+
+
+
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Toolbar-->
+    <div class="toolbar" id="kt_toolbar">
+        <!--begin::Container-->
+        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+            <!--begin::Page title-->
+            <div data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title d-flex align-items-center me-3 flex-wrap lh-1">
+                <!--begin::Title-->
+                <h1 class="d-flex align-items-center text-gray-900 fw-bold my-1 fs-3"> بيانات بنود ايرادات ومصروفات </h1>
+                <!--end::Title-->
+                
+            </div>
+            <!--end::Page title-->
+            <!--begin::Actions-->
+            <div class="d-flex align-items-center py-1">
+                
+                <!--begin::Button-->
+                {% if perms.settings.add_settings %}
+                <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_category"> اضافة بند ايرادات ومصروفات </a>
+                {% endif %}
+                <!--end::Button-->
+            </div>
+            <!--end::Actions-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--begin::Container-->
+        <div id="kt_content_container" class="container-xxl">
+            <!--begin::Card-->
+            <div class="card">
+                <!--begin::Card body-->
+                <div class="card-body p-0">
+                    <div class="card-px py-3 my-3">
+
+
+                        <table id="kt_datatable_dom_positioning" class="table table-striped table-row-bordered gy-2 gs-7 border rounded">
+                            <thead class="bg-light-primary">
+                                <tr class="fw-bold fs-7 text-gray-800 px-7">
+                                    <th>التاريخ</th>
+                                    <th> الايصال </th>
+                                    <th >التصنيف</th>
+                                    <th >البند</th>
+                                    <th >البيان</th>
+                                    <th >ايرادات</th>
+                                    <th >مصروفات</th>
+                                    <th style="width:15%;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in transactions %}
+                                    <tr>
+                                            
+                                        <td>{{ transaction.date }}</td>
+                                        <td>{{ transaction.receipt }}</td>
+                                        <td>
+                                            {% if transaction.type == 'income' %}
+                                            <span class="badge bg-success">ايراد</span>
+                                            {% elif transaction.type == 'expense' %}
+                                            <span class="badge bg-danger text-light">مصروف</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ transaction.category.name }}</td>
+                                        <td>{{ transaction.description }}</td>
+                                        
+                                        <td>
+                                            {% if transaction.type == 'income' %}
+                                            {{ transaction.amount }}
+                                            {% elif transaction.type == 'expense' %}
+                                            0.00
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if transaction.type == 'income' %}
+                                            0.00
+                                            {% elif transaction.type == 'expense' %}
+                                            {{ transaction.amount }}
+                                            {% endif %}
+                                        </td>
+
+                                        {% if perms.settings.change_settings or perms.settings.delete_settings %}
+                                        <td>
+                                        
+                                            {% if perms.settings.change_settings %}
+
+                                            <a href="#" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#kt_modal_edit_category"
+                                                data-id="{{ category.id }}" 
+                                                data-name="{{ category.name }}"
+                                                data-type="{{ category.type }}"
+                                                data-details="{{ category.details }}"> تعديل </a>
+
+                                            {% endif %}
+
+
+                                            {% if perms.settings.delete_settings %}
+
+                                            <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#kt_modal_delete_category"
+                                                data-id="{{ category.id }}" 
+                                                data-name="{{ category.name }}"> حذف </a>
+                                            
+                                            {% endif %}
+
+
+                                        </td>
+                                        {% endif %}
+
+                                    </tr>
+                                    {% endfor %}
+                                
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+                <!--end::Card body-->
+            </div>
+            <!--end::Card-->
+
+
+
+            <!--begin::Modals-->
+
+
+            {% if perms.settings.add_settings %}
+            <!--begin::Modal - Add category-->
+            <div class="modal fade" id="kt_modal_add_category" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog modal-dialog-centered mw-900px">
+                    <!--begin::Modal content-->
+                    <div class="modal-content">
+                        <!--begin::Modal header-->
+                        <div class="modal-header">
+                            <!--begin::Modal title-->
+                            <h2> إضافة بنود ايرادات ومصروفات جديدة </h2>
+                            <!--end::Modal title-->
+                            <!--begin::Close-->
+                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                                <i class="ki-duotone ki-cross fs-1">
+                                    <span class="path1"></span>
+                                    <span class="path2"></span>
+                                </i>
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                        <!--end::Modal header-->
+                        <!--begin::Modal body-->
+                        <div class="modal-body py-lg-10 px-lg-10">
+                            
+                            <form class="form" action="{% url 'settings:add-cash-category' %}" method="post">
+                                {% csrf_token %}
+                            
+                                <div class="row gy-4">
+                                    
+                                    
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl-7 col-md-7">
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text">اسم البند</span>
+                                            <input type="text" class="form-control" name="name" required/>
+                                        </div>
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl-5 col-md-5">
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text"> تصنيف البند  </span>
+                                            <select class="form-select" aria-label="Select example" name="type" required>
+                                                <option value="" disabled selected>اختر تصنيف البند</option>
+                                                <option value="income">ايرادات</option>
+                                                <option value="expense">مصروفات</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl col-md">
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text" id="inputGroup-sizing-sm">  ملاحظات </span>
+                                            <textarea class="form-control" name="details" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <div class="d-flex justify-content-end">
+                                        
+                                        <!--begin::Button-->
+                                        <button type="submit" class="btn btn-sm btn-success">حفظ</button>
+                                        <!--end::Button-->
+                                        <!--begin::Button-->
+                                        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">اغلاق</button>
+                                        <!--end::Button-->
+                                    </div>
+                                    
+                                </div>
+                            
+                            </form>
+
+                        </div>
+                        <!--end::Modal body-->
+                    </div>
+                    <!--end::Modal content-->
+                </div>
+                <!--end::Modal dialog-->
+            </div>
+            <!--end::Modal - Add category -->
+            {% endif %}
+
+
+            {% if perms.settings.change_settings %}
+            <!--begin::Modal - Edit category-->
+            <div class="modal fade" id="kt_modal_edit_category" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog modal-dialog-centered mw-900px">
+                    <!--begin::Modal content-->
+                    <div class="modal-content">
+                        <!--begin::Modal header-->
+                        <div class="modal-header">
+                            <!--begin::Modal title-->
+                            <h2>تعديل بند ايرادات ومصروفات</h2>
+                            <!--end::Modal title-->
+                            <!--begin::Close-->
+                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                                <i class="ki-duotone ki-cross fs-1">
+                                    <span class="path1"></span>
+                                    <span class="path2"></span>
+                                </i>
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                        <!--end::Modal header-->
+                        <!--begin::Modal body-->
+                        <div class="modal-body py-lg-10 px-lg-10">
+                            
+                            <form class="form" action="{% url 'settings:edit-cash-category' %}" method="post">
+                                {% csrf_token %}
+                            
+                                <div class="row gy-4">
+                                    
+                                    
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl-7 col-md-7">
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text">اسم البند</span>
+                                            <input type="text" class="form-control" name="name" id="name" required/>
+                                            <input type="hidden" class="form-control" name="id" id="id" required/>
+                                        </div>
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl-5 col-md-5">
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text"> تصنيف البند  </span>
+                                            <select class="form-select" aria-label="Select example" name="type" id="type" required>
+                                                <option value="" disabled selected>اختر تصنيف البند</option>
+                                                <option value="income">ايرادات</option>
+                                                <option value="expense">مصروفات</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl col-md">
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text">  ملاحظات </span>
+                                            <textarea class="form-control" name="details" id="details" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <div class="d-flex justify-content-end">
+                                        
+                                        <!--begin::Button-->
+                                        <button type="submit" class="btn btn-sm btn-success">حفظ</button>
+                                        <!--end::Button-->
+                                        <!--begin::Button-->
+                                        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">اغلاق</button>
+                                        <!--end::Button-->
+                                    </div>
+                                    
+                                </div>
+                            
+                            </form>
+
+                        </div>
+                        <!--end::Modal body-->
+                    </div>
+                    <!--end::Modal content-->
+                </div>
+                <!--end::Modal dialog-->
+            </div>
+            <!--end::Modal - Edit category -->
+            {% endif %}
+
+
+            {% if perms.settings.delete_settings %}
+            <!--begin::Modal - Delete category-->
+            <div class="modal fade" tabindex="-1" id="kt_modal_delete_category">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title"> حذف بند ايرادات ومصروفات </h3>
+            
+                            <!--begin::Close-->
+                            <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                        
+                        <form action="{% url 'settings:delete-cash-category' %}" method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <p class="text-danger fs-25"> هل انت متأكد من حذف البند :  </p>
+                                    <!--begin::Input-->
+                                    <input class="form-control form-control-solid" name="name" id="name"  readonly required />
+                                    <input class="form-control" type="hidden"  name="id" id="id" placeholder="category Name" required />
+                                    <!--end::Input-->
+                            </div>
+                
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-sm btn-danger"> تأكيد الحذف </button>
+                                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">اغلاق</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--end::Modal - Delete category -->
+            {% endif %}
+            
+
+            <!--end::Modals-->
+
+
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+<!--end::Content-->
+
+    
+{% endblock content %}
+
+
+{% block js %}
+
+
+<script src="{% static 'assets/plugins/custom/datatables/datatables.bundle.js' %}"></script>
+
+
+<script>
+    
+
+    $("#kt_datatable_dom_positioning").DataTable({
+	"language": {
+		"lengthMenu": "Show _MENU_",
+	},
+    "lengthMenu": [50, 100, 200, 300],
+    "pageLength": 50,
+   
+	"dom":
+		"<'row mb-2'" +
+		"<'col-sm-6 d-flex align-items-center justify-conten-start dt-toolbar'l>" +
+		"<'col-sm-6 d-flex align-items-center justify-content-end dt-toolbar'f>" +
+		">" +
+
+		"<'table-responsive'tr>" +
+
+		"<'row'" +
+		"<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+		"<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+		">"
+});
+
+    
+</script>
+
+
+<script>
+    $('#kt_modal_edit_category').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        var name = button.data('name')
+        var type = button.data('type')
+        var details = button.data('details')
+        
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+        modal.find('.modal-body #name').val(name);
+        modal.find('.modal-body #type').val(type);
+        modal.find('.modal-body #details').val(details);
+     
+    });
+
+    $('#kt_modal_delete_category').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        var name = button.data('name')
+        
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+        modal.find('.modal-body #name').val(name);
+     
+    });
+
+</script>
+
+
+{% endblock js %}
+    

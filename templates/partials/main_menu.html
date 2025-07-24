@@ -73,7 +73,8 @@
                         <div class="menu-item">
                             <!--begin:Menu link-->
 
-                            <a class="menu-link " href="#">
+                            {% url 'accounting:cash-transactions' as cash_transactions_url %}
+                            <a class="menu-link {% if request.path == cash_transactions_url %}active{% endif %}" href="{{ cash_transactions_url }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>

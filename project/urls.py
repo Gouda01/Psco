@@ -27,11 +27,12 @@ from django.contrib.auth.decorators import login_required
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # path('', login_required(home), name='home'),
+    path('', include('dashboard.urls')),
 
     path('userauths/', include('userauths.urls')),
     path('settings/', include('settings.urls')),
-    path('', include('dashboard.urls')),
+    path('accounting/', include('accounting.urls')),
+    
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
