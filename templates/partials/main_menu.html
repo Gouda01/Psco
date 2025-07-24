@@ -163,12 +163,12 @@
                         <!--begin:Menu item-->
                         <div class="menu-item">
                             <!--begin:Menu link-->
-
-                            <a class="menu-link " href="#">
+                            {% url 'settings:cash-categories-list' as all_cash_categories_url %}
+                            <a class="menu-link {% if request.path == all_cash_categories_url %}active{% endif %}" href="{{ all_cash_categories_url }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                <span class="menu-title"> الادارات </span>
+                                <span class="menu-title"> بنود الايرادات والمصروفات </span>
                             </a>
                             <!--end:Menu link-->
                         </div>

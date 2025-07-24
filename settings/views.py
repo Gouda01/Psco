@@ -2,76 +2,85 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 
-from settings.models import Management
+from settings.models import CashCategory
 
 
 # Create your views here.
 
 
-# Managements
+# Cash Category
 @login_required
 @permission_required('settings.view_settings', raise_exception=True)
-def managements_view (request):
-    managements = Management.objects.all()
+def cash_categories_view (request):
+    categories = CashCategory.objects.all()
     
     context = {
-        'managements' : managements,
+        'categories' : categories,
     }
     
-    return render (request, 'managements.html', context)
+    return render (request, 'cash_categories.html', context)
 
 
 @login_required
 @permission_required('settings.add_settings', raise_exception=True)
-def add_management(request):
+def add_cash_category(request):
 
     if request.method=='POST' :
         name = request.POST.get('name')
-        code = request.POST.get('code')
+        type = request.POST.get('type')
         details = request.POST.get('details')
              
 
-        Management.objects.create(
+        CashCategory.objects.create(
             name = name,
-            code = code,
+            type = type,
             details = details,
             
         )
 
-        messages.success(request, 'Management Added Successfuly')
-        return redirect("settings:managements-list")
+        messages.success(request, 'تم اضافة البند بنجاح')
+        return redirect("settings:cash-categories-list")
     else :
-        messages.warning(request, 'Management Didnt Add .... Try again')
-        return redirect("settings:managements-list")
+        messages.warning(request, 'لم يتم اضافة البند .... حاول مرة اخري')
+        return redirect("settings:cash-categories-list")
 
 
 @login_required
 @permission_required('settings.change_settings', raise_exception=True)
-def edit_management(request):
+def edit_cash_category(request):
     
-    id = request.POST.get('id')
-    management = Management.objects.get(id=id)
+    if request.method=='POST' :
+        id = request.POST.get('id')
+        cash_category = CashCategory.objects.get(id=id)
 
-    name = request.POST.get('name')
-    code = request.POST.get('code')
-    details = request.POST.get('details')
+        name = request.POST.get('name')
+        type = request.POST.get('type')
+        details = request.POST.get('details')
 
-    management.name = name
-    management.code = code
-    management.details = details
-    
-    management.save()
-    
-    messages.success(request, 'Management Edited Successfuly')
-    return redirect("settings:managements-list")
+        cash_category.name = name
+        cash_category.type = type
+        cash_category.details = details
+        
+        cash_category.save()
+        
+        messages.success(request, 'تم تعديل البند بنجاح')
+        return redirect("settings:cash-categories-list")
+    else :
+        messages.warning(request, 'لم يتم تعديل البند .... حاول مرة اخري')
+        return redirect("settings:cash-categories-list")
+
 
 
 @login_required
 @permission_required('settings.delete_settings', raise_exception=True)
-def delete_management(request):
+def delete_cash_category(request):
     
-    id = request.POST.get('id')
-    management = Management.objects.get(id=id)
-    management.delete()
-    messages.error(request, 'Management Deleted Successfuly')
-    return redirect("settings:managements-list")
+    if request.method=='POST' :
+        id = request.POST.get('id')
+        cash_category = CashCategory.objects.get(id=id)
+        cash_category.delete()
+        messages.success(request, 'تم حذف البند بنجاح')
+        return redirect("settings:cash-categories-list")
+    else :
+        messages.warning(request, 'لم يتم حذف البند .... حاول مرة اخري')
+        return redirect("settings:cash-categories-list")

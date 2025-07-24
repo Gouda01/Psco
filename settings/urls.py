@@ -9,11 +9,11 @@ app_name = "settings"
 
 urlpatterns = [
     
-    # Managements :
-    path('managements-list/',login_required(views.managements_view),name='managements-list'),
-    path('add-management/',login_required(views.add_management),name='add-management'),
-    path('edit-management/',login_required(views.edit_management),name='edit-management'),
-    path('delete-management/',login_required(views.delete_management),name='delete-management'),
+    # Cash Categories :
+    path('cash-categories-list/',login_required(views.cash_categories_view),name='cash-categories-list'),
+    path('add-cash-category/',login_required(views.add_cash_category),name='add-cash-category'),
+    path('edit-cash-category/',login_required(views.edit_cash_category),name='edit-cash-category'),
+    path('delete-cash-category/',login_required(views.delete_cash_category),name='delete-cash-category'),
 
     
 ]

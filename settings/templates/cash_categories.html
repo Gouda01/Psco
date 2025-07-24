@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %} بيانات الإدارات {% endblock title %}
+{% block title %} بيانات بنود ايرادات ومصروفات {% endblock title %}
 
 
 {% block css %}
@@ -24,7 +24,7 @@
             <!--begin::Page title-->
             <div data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title d-flex align-items-center me-3 flex-wrap lh-1">
                 <!--begin::Title-->
-                <h1 class="d-flex align-items-center text-gray-900 fw-bold my-1 fs-3"> بيانات الإدارات </h1>
+                <h1 class="d-flex align-items-center text-gray-900 fw-bold my-1 fs-3"> بيانات بنود ايرادات ومصروفات </h1>
                 <!--end::Title-->
                 
             </div>
@@ -34,7 +34,7 @@
                 
                 <!--begin::Button-->
                 {% if perms.settings.add_settings %}
-                <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_management"> اضافة ادارة </a>
+                <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_category"> اضافة بند ايرادات ومصروفات </a>
                 {% endif %}
                 <!--end::Button-->
             </div>
@@ -58,40 +58,46 @@
                             <thead class="bg-light-primary">
                                 <tr class="fw-bold fs-7 text-gray-800 px-7">
                                     <th data-ordering="false" style="width:5%;">#</th>
-                                    <th>الادارة</th>
-                                    <th> الكود </th>
+                                    <th>البند</th>
+                                    <th> التصنيف </th>
                                     <th >تفاصيل</th>
                                     <th style="width:15%;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for management in managements %}
+                                {% for category in categories %}
                                     <tr>
                                             
                                         <td>{{ forloop.counter }}</td>
-                                        <td>{{ management.name }}</td>
-                                        <td>{{ management.code}}</td>
-                                        <td>{{ management.details}}</td>
+                                        <td>{{ category.name }}</td>
+                                        <td>
+                                            {% if category.type == 'income' %}
+                                            <span class="badge bg-success">ايرادات</span>
+                                            {% elif category.type == 'expense' %}
+                                            <span class="badge bg-danger text-light">مصروفات</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ category.details}}</td>
 
                                         {% if perms.settings.change_settings or perms.settings.delete_settings %}
                                         <td>
                                         
                                             {% if perms.settings.change_settings %}
 
-                                            <a href="#" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#kt_modal_edit_management"
-                                                data-id="{{ management.id }}" 
-                                                data-name="{{ management.name }}"
-                                                data-code="{{ management.code }}"
-                                                data-details="{{ management.details }}"> تعديل </a>
+                                            <a href="#" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#kt_modal_edit_category"
+                                                data-id="{{ category.id }}" 
+                                                data-name="{{ category.name }}"
+                                                data-type="{{ category.type }}"
+                                                data-details="{{ category.details }}"> تعديل </a>
 
                                             {% endif %}
 
 
                                             {% if perms.settings.delete_settings %}
 
-                                            <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#kt_modal_delete_management"
-                                                data-id="{{ management.id }}" 
-                                                data-name="{{ management.name }}"> حذف </a>
+                                            <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#kt_modal_delete_category"
+                                                data-id="{{ category.id }}" 
+                                                data-name="{{ category.name }}"> حذف </a>
                                             
                                             {% endif %}
 
@@ -118,8 +124,8 @@
 
 
             {% if perms.settings.add_settings %}
-            <!--begin::Modal - Add Management-->
-            <div class="modal fade" id="kt_modal_add_management" tabindex="-1" aria-hidden="true">
+            <!--begin::Modal - Add category-->
+            <div class="modal fade" id="kt_modal_add_category" tabindex="-1" aria-hidden="true">
                 <!--begin::Modal dialog-->
                 <div class="modal-dialog modal-dialog-centered mw-900px">
                     <!--begin::Modal content-->
@@ -127,7 +133,7 @@
                         <!--begin::Modal header-->
                         <div class="modal-header">
                             <!--begin::Modal title-->
-                            <h2> إضافة إدارة جديدة </h2>
+                            <h2> إضافة بنود ايرادات ومصروفات جديدة </h2>
                             <!--end::Modal title-->
                             <!--begin::Close-->
                             <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
@@ -142,52 +148,50 @@
                         <!--begin::Modal body-->
                         <div class="modal-body py-lg-10 px-lg-10">
                             
-                            <form class="form" action="{% url 'settings:add-management' %}" method="post">
+                            <form class="form" action="{% url 'settings:add-cash-category' %}" method="post">
                                 {% csrf_token %}
                             
-                                <div class="d-flex flex-column gap-5 gap-md-7">
+                                <div class="row gy-4">
+                                    
                                     
                                     <!--begin::Input group-->
-                                    <div class="d-flex flex-column flex-md-row gap-5">
-                                        <div class="fv-row flex-row-fluid">
-                                            <!--begin::Label-->
-                                            <label class="required form-label"> إسم الإدارة </label>
-                                            <!--end::Label-->
-                                            <!--begin::Input-->
-                                            <input class="form-control" name="name" placeholder="اسم الإدارة" required />
-                                            <!--end::Input-->
-                                        </div>
-                                        <div class="flex-row-fluid">
-                                            <!--begin::Label-->
-                                            <label class="required form-label"> كود الإدارة </label>
-                                            <!--end::Label-->
-                                            <!--begin::Input-->
-                                            <input class="form-control" name="code" placeholder="كود الإدارة" required />
-                                            <!--end::Input-->
+                                    <div class="col-xxl-7 col-md-7">
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text">اسم البند</span>
+                                            <input type="text" class="form-control" name="name" required/>
                                         </div>
                                     </div>
                                     <!--end::Input group-->
+
                                     <!--begin::Input group-->
-                                    <div class="d-flex flex-column flex-md-row gap-5">
-                                        <div class="flex-row-fluid">
-                                            <!--begin::Label-->
-                                            <label class="form-label">تفاصيل</label>
-                                            <!--end::Label-->
-                                            <!--begin::Input-->
-                                            <textarea class="form-control" rows="3" name="details"></textarea>
-                                            <!--end::Input-->
+                                    <div class="col-xxl-5 col-md-5">
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text"> تصنيف البند  </span>
+                                            <select class="form-select" aria-label="Select example" name="type" required>
+                                                <option value="" disabled selected>اختر تصنيف البند</option>
+                                                <option value="income">ايرادات</option>
+                                                <option value="expense">مصروفات</option>
+                                            </select>
                                         </div>
-                                        
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl col-md">
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text" id="inputGroup-sizing-sm">  ملاحظات </span>
+                                            <textarea class="form-control" name="details" rows="3"></textarea>
+                                        </div>
                                     </div>
                                     <!--end::Input group-->
 
                                     <div class="d-flex justify-content-end">
                                         
                                         <!--begin::Button-->
-                                        <button type="submit" class="btn btn-success">حفظ</button>
+                                        <button type="submit" class="btn btn-sm btn-success">حفظ</button>
                                         <!--end::Button-->
                                         <!--begin::Button-->
-                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">اغلاق</button>
+                                        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">اغلاق</button>
                                         <!--end::Button-->
                                     </div>
                                     
@@ -202,13 +206,13 @@
                 </div>
                 <!--end::Modal dialog-->
             </div>
-            <!--end::Modal - Add Management -->
+            <!--end::Modal - Add category -->
             {% endif %}
 
 
             {% if perms.settings.change_settings %}
-            <!--begin::Modal - Edit Management-->
-            <div class="modal fade" id="kt_modal_edit_management" tabindex="-1" aria-hidden="true">
+            <!--begin::Modal - Edit category-->
+            <div class="modal fade" id="kt_modal_edit_category" tabindex="-1" aria-hidden="true">
                 <!--begin::Modal dialog-->
                 <div class="modal-dialog modal-dialog-centered mw-900px">
                     <!--begin::Modal content-->
@@ -216,7 +220,7 @@
                         <!--begin::Modal header-->
                         <div class="modal-header">
                             <!--begin::Modal title-->
-                            <h2>تعديل الإدارة</h2>
+                            <h2>تعديل بند ايرادات ومصروفات</h2>
                             <!--end::Modal title-->
                             <!--begin::Close-->
                             <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
@@ -231,53 +235,51 @@
                         <!--begin::Modal body-->
                         <div class="modal-body py-lg-10 px-lg-10">
                             
-                            <form class="form" action="{% url 'settings:edit-management' %}" method="post">
+                            <form class="form" action="{% url 'settings:edit-cash-category' %}" method="post">
                                 {% csrf_token %}
                             
-                                <div class="d-flex flex-column gap-5 gap-md-7">
+                                <div class="row gy-4">
+                                    
                                     
                                     <!--begin::Input group-->
-                                    <div class="d-flex flex-column flex-md-row gap-5">
-                                        <div class="fv-row flex-row-fluid">
-                                            <!--begin::Label-->
-                                            <label class="required form-label"> اسم الإدارة </label>
-                                            <!--end::Label-->
-                                            <!--begin::Input-->
-                                            <input class="form-control" name="name" id="name" placeholder="اسم الإدارة" required />
-                                            <input class="form-control" type="hidden"  name="id" id="id" required />
-                                            <!--end::Input-->
-                                        </div>
-                                        <div class="flex-row-fluid">
-                                            <!--begin::Label-->
-                                            <label class="required form-label"> كود الإدارة </label>
-                                            <!--end::Label-->
-                                            <!--begin::Input-->
-                                            <input class="form-control" name="code" id="code" placeholder="كود الإدارة" required />
-                                            <!--end::Input-->
+                                    <div class="col-xxl-7 col-md-7">
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text">اسم البند</span>
+                                            <input type="text" class="form-control" name="name" id="name" required/>
+                                            <input type="hidden" class="form-control" name="id" id="id" required/>
                                         </div>
                                     </div>
                                     <!--end::Input group-->
+
                                     <!--begin::Input group-->
-                                    <div class="d-flex flex-column flex-md-row gap-5">
-                                        <div class="flex-row-fluid">
-                                            <!--begin::Label-->
-                                            <label class="form-label">تفاصيل</label>
-                                            <!--end::Label-->
-                                            <!--begin::Input-->
-                                            <textarea class="form-control" rows="3" name="details" id="details"></textarea>
-                                            <!--end::Input-->
+                                    <div class="col-xxl-5 col-md-5">
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text"> تصنيف البند  </span>
+                                            <select class="form-select" aria-label="Select example" name="type" id="type" required>
+                                                <option value="" disabled selected>اختر تصنيف البند</option>
+                                                <option value="income">ايرادات</option>
+                                                <option value="expense">مصروفات</option>
+                                            </select>
                                         </div>
-                                        
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl col-md">
+                                        <div class="input-group mb-2">
+                                            <span class="input-group-text">  ملاحظات </span>
+                                            <textarea class="form-control" name="details" id="details" rows="3"></textarea>
+                                        </div>
                                     </div>
                                     <!--end::Input group-->
 
                                     <div class="d-flex justify-content-end">
                                         
                                         <!--begin::Button-->
-                                        <button type="submit" class="btn btn-success">حفظ</button>
+                                        <button type="submit" class="btn btn-sm btn-success">حفظ</button>
                                         <!--end::Button-->
                                         <!--begin::Button-->
-                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">اغلاق</button>
+                                        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">اغلاق</button>
                                         <!--end::Button-->
                                     </div>
                                     
@@ -292,17 +294,17 @@
                 </div>
                 <!--end::Modal dialog-->
             </div>
-            <!--end::Modal - Edit Management -->
+            <!--end::Modal - Edit category -->
             {% endif %}
 
 
             {% if perms.settings.delete_settings %}
-            <!--begin::Modal - Delete Management-->
-            <div class="modal fade" tabindex="-1" id="kt_modal_delete_management">
+            <!--begin::Modal - Delete category-->
+            <div class="modal fade" tabindex="-1" id="kt_modal_delete_category">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3 class="modal-title"> حذف الإدارة </h3>
+                            <h3 class="modal-title"> حذف بند ايرادات ومصروفات </h3>
             
                             <!--begin::Close-->
                             <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
@@ -311,25 +313,25 @@
                             <!--end::Close-->
                         </div>
                         
-                        <form action="{% url 'settings:delete-management' %}" method="post">
+                        <form action="{% url 'settings:delete-cash-category' %}" method="post">
                             {% csrf_token %}
                             <div class="modal-body">
-                                <p class="text-danger fs-25"> هل انت متأكد من حذف الإدارة :  </p>
+                                <p class="text-danger fs-25"> هل انت متأكد من حذف البند :  </p>
                                     <!--begin::Input-->
                                     <input class="form-control form-control-solid" name="name" id="name"  readonly required />
-                                    <input class="form-control" type="hidden"  name="id" id="id" placeholder="Management Name" required />
+                                    <input class="form-control" type="hidden"  name="id" id="id" placeholder="category Name" required />
                                     <!--end::Input-->
                             </div>
                 
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-danger"> تأكيد الحذف </button>
-                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">اغلاق</button>
+                                <button type="submit" class="btn btn-sm btn-danger"> تأكيد الحذف </button>
+                                <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">اغلاق</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <!--end::Modal - Delete Management -->
+            <!--end::Modal - Delete category -->
             {% endif %}
             
 
@@ -382,22 +384,22 @@
 
 
 <script>
-    $('#kt_modal_edit_management').on('show.bs.modal', function(event) {
+    $('#kt_modal_edit_category').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget)
         var id = button.data('id')
         var name = button.data('name')
-        var code = button.data('code')
+        var type = button.data('type')
         var details = button.data('details')
         
         var modal = $(this)
         modal.find('.modal-body #id').val(id);
         modal.find('.modal-body #name').val(name);
-        modal.find('.modal-body #code').val(code);
+        modal.find('.modal-body #type').val(type);
         modal.find('.modal-body #details').val(details);
      
     });
 
-    $('#kt_modal_delete_management').on('show.bs.modal', function(event) {
+    $('#kt_modal_delete_category').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget)
         var id = button.data('id')
         var name = button.data('name')
