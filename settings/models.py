@@ -35,7 +35,7 @@ class CashCategory(models.Model):
     type = models.CharField(max_length=10, choices=CATEGORY_TYPE_CHOICES)
     details = models.CharField(max_length=1000, null=True, blank=True)
 
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

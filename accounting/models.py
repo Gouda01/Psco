@@ -10,7 +10,9 @@ User = get_user_model()
 class Cashbox(models.Model):
     name = models.CharField(max_length=100, default="الخزينة الرئيسية")
     balance = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+
     created_at = models.DateTimeField(auto_now_add=True)
+    edited_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.name} - {self.branch.name}"
@@ -30,6 +32,9 @@ class CashTransaction(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     date = models.DateField(auto_now_add=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    edited_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return f"{self.get_type_display()} - {self.amount}"
 
@@ -45,7 +50,7 @@ class CashTransaction(models.Model):
 
             super().save(*args, **kwargs)
 
-            # إضافة القيمة الجديدة للرصد
+            # إضافة القيمة الجديدة للرصيد
             if self.type == 'income':
                 self.cashbox.balance += self.amount
             elif self.type == 'expense':
