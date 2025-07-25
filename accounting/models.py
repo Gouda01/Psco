@@ -32,7 +32,7 @@ class CashTransaction(models.Model):
     description = models.CharField(max_length=1000)
     receipt = models.CharField(max_length=50, null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField()
 
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)

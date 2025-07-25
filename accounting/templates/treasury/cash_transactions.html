@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block title %} بيانات بنود ايرادات ومصروفات {% endblock title %}
 
@@ -24,7 +25,8 @@
             <!--begin::Page title-->
             <div data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title d-flex align-items-center me-3 flex-wrap lh-1">
                 <!--begin::Title-->
-                <h1 class="d-flex align-items-center text-gray-900 fw-bold my-1 fs-3"> بيانات بنود ايرادات ومصروفات </h1>
+                <h1 class="d-flex align-items-center text-gray-900 fw-bold my-1 fs-3"> حركة الخزينة الرئيسية: <span class="fs-5 text-primary px-6">  رصيد الخزينة : {{balance|intcomma}}</span></h1>
+                
                 <!--end::Title-->
                 
             </div>
@@ -34,7 +36,8 @@
                 
                 <!--begin::Button-->
                 {% if perms.settings.add_settings %}
-                <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_add_category"> اضافة بند ايرادات ومصروفات </a>
+                <a href="#" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#kt_modal_add_income"> اضافة ايراد </a>
+                <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#kt_modal_add_expense"> اضافة مصروف </a>
                 {% endif %}
                 <!--end::Button-->
             </div>
@@ -53,8 +56,39 @@
                 <div class="card-body p-0">
                     <div class="card-px py-3 my-3">
 
+                        <div class="row gy-4">
+                            
+                            <!--begin::Input group-->
+                            <div class="col-xxl-4 col-md-4">
+                                <div class="input-group input-group-sm mb-2">
+                                    <span class="input-group-text bg-success text-light fs-6">أجمالي الايرادات</span>
+                                    <input type="text" class="form-control fs-5" value="{{ total_incomes|intcomma }}" readonly/>
+                                </div>
+                            </div>
+                            <!--end::Input group-->
 
-                        <table id="kt_datatable_dom_positioning" class="table table-striped table-row-bordered gy-2 gs-7 border rounded">
+                            <!--begin::Input group-->
+                            <div class="col-xxl-4 col-md-4">
+                                <div class="input-group input-group-sm mb-2">
+                                    <span class="input-group-text bg-danger text-light fs-6">أجمالي المصروفات</span>
+                                    <input type="text" class="form-control fs-5" value="{{ total_expenses|intcomma }}" readonly/>
+                                </div>
+                            </div>
+                            <!--end::Input group-->
+
+                            <!--begin::Input group-->
+                            <div class="col-xxl-4 col-md-4">
+                                <div class="input-group input-group-sm mb-2">
+                                    <span class="input-group-text bg-primary text-light fs-6">رصيد الخزينة</span>
+                                    <input type="text" class="form-control fs-5" value="{{ fit_balance|intcomma }}" readonly/>
+                                </div>
+                            </div>
+                            <!--end::Input group-->
+                            
+                        </div>
+
+
+                        <table id="kt_datatable_dom_positioning" class="table table-striped table-row-bordered gy-3 gs-7 border rounded">
                             <thead class="bg-light-primary">
                                 <tr class="fw-bold fs-7 text-gray-800 px-7">
                                     <th>التاريخ</th>
@@ -71,11 +105,11 @@
                                 {% for transaction in transactions %}
                                     <tr>
                                             
-                                        <td>{{ transaction.date }}</td>
+                                        <td>{{ transaction.date|date:"Y-m-d" }}</td>
                                         <td>{{ transaction.receipt }}</td>
                                         <td>
                                             {% if transaction.type == 'income' %}
-                                            <span class="badge bg-success">ايراد</span>
+                                            <span class="badge bg-success text-light">ايراد</span>
                                             {% elif transaction.type == 'expense' %}
                                             <span class="badge bg-danger text-light">مصروف</span>
                                             {% endif %}
@@ -85,7 +119,7 @@
                                         
                                         <td>
                                             {% if transaction.type == 'income' %}
-                                            {{ transaction.amount }}
+                                            {{ transaction.amount|intcomma }}
                                             {% elif transaction.type == 'expense' %}
                                             0.00
                                             {% endif %}
@@ -94,7 +128,7 @@
                                             {% if transaction.type == 'income' %}
                                             0.00
                                             {% elif transaction.type == 'expense' %}
-                                            {{ transaction.amount }}
+                                            {{ transaction.amount|intcomma }}
                                             {% endif %}
                                         </td>
 
@@ -143,8 +177,8 @@
 
 
             {% if perms.settings.add_settings %}
-            <!--begin::Modal - Add category-->
-            <div class="modal fade" id="kt_modal_add_category" tabindex="-1" aria-hidden="true">
+            <!--begin::Modal - Add Income-->
+            <div class="modal fade" id="kt_modal_add_income" tabindex="-1" aria-hidden="true">
                 <!--begin::Modal dialog-->
                 <div class="modal-dialog modal-dialog-centered mw-900px">
                     <!--begin::Modal content-->
@@ -152,7 +186,7 @@
                         <!--begin::Modal header-->
                         <div class="modal-header">
                             <!--begin::Modal title-->
-                            <h2> إضافة بنود ايرادات ومصروفات جديدة </h2>
+                            <h2> إضافة ايرادات </h2>
                             <!--end::Modal title-->
                             <!--begin::Close-->
                             <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
@@ -167,39 +201,59 @@
                         <!--begin::Modal body-->
                         <div class="modal-body py-lg-10 px-lg-10">
                             
-                            <form class="form" action="{% url 'settings:add-cash-category' %}" method="post">
+                            <form class="form" action="{% url 'accounting:add-income' %}" method="post">
                                 {% csrf_token %}
                             
                                 <div class="row gy-4">
                                     
                                     
                                     <!--begin::Input group-->
-                                    <div class="col-xxl-7 col-md-7">
-                                        <div class="input-group mb-2">
-                                            <span class="input-group-text">اسم البند</span>
-                                            <input type="text" class="form-control" name="name" required/>
+                                    <div class="col-xxl-3 col-md-3">
+                                        <div class="input-group input-group-sm mb-2">
+                                            <span class="input-group-text">رقم الايصال</span>
+                                            <input type="text" class="form-control" name="receipt" required/>
+                                            <input type="hidden" class="form-control" name="type" value="income" required/>
                                         </div>
                                     </div>
                                     <!--end::Input group-->
 
                                     <!--begin::Input group-->
-                                    <div class="col-xxl-5 col-md-5">
-                                        <div class="input-group mb-2">
-                                            <span class="input-group-text"> تصنيف البند  </span>
-                                            <select class="form-select" aria-label="Select example" name="type" required>
-                                                <option value="" disabled selected>اختر تصنيف البند</option>
-                                                <option value="income">ايرادات</option>
-                                                <option value="expense">مصروفات</option>
+                                    <div class="col-xxl-3 col-md-3">
+                                        <div class="input-group input-group-sm mb-2">
+                                            <span class="input-group-text" id="inputGroup-sizing-sm"> التاريخ </span>
+                                            <input class="form-control" placeholder="اختر التاريخ" name="date" id="kt_datepicker_1"/>
+                                        </div>
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl-6 col-md-6">
+                                        <div class="input-group input-group-sm mb-2">
+                                            <span class="input-group-text"> البند </span>
+                                            <select class="form-select" aria-label="Select example" name="category_id" required>
+                                                <option value="" disabled selected>اختر البند</option>
+                                                {% for category in income_categories %}
+                                                <option value="{{ category.id }}">{{ category.name }}</option> 
+                                                {% endfor %}
                                             </select>
                                         </div>
                                     </div>
                                     <!--end::Input group-->
 
                                     <!--begin::Input group-->
-                                    <div class="col-xxl col-md">
-                                        <div class="input-group mb-2">
-                                            <span class="input-group-text" id="inputGroup-sizing-sm">  ملاحظات </span>
-                                            <textarea class="form-control" name="details" rows="3"></textarea>
+                                    <div class="col-xxl-3 col-md-3">
+                                        <div class="input-group input-group-sm mb-2">
+                                            <span class="input-group-text">القيمة</span>
+                                            <input type="text" class="form-control" name="amount" required/>
+                                        </div>
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl-9 col-md-9">
+                                        <div class="input-group input-group-sm mb-2">
+                                            <span class="input-group-text"> البيان </span>
+                                            <input type="text" class="form-control" name="description" required/>
                                         </div>
                                     </div>
                                     <!--end::Input group-->
@@ -225,7 +279,117 @@
                 </div>
                 <!--end::Modal dialog-->
             </div>
-            <!--end::Modal - Add category -->
+            <!--end::Modal - Add Income -->
+            {% endif %}
+
+
+
+            {% if perms.settings.add_settings %}
+            <!--begin::Modal - Add Expense-->
+            <div class="modal fade" id="kt_modal_add_expense" tabindex="-1" aria-hidden="true">
+                <!--begin::Modal dialog-->
+                <div class="modal-dialog modal-dialog-centered mw-900px">
+                    <!--begin::Modal content-->
+                    <div class="modal-content">
+                        <!--begin::Modal header-->
+                        <div class="modal-header">
+                            <!--begin::Modal title-->
+                            <h2> إضافة مصروفات <span class="fs-5 text-primary px-6">  رصيد الخزينة : {{balance|intcomma}}</span> </h2>
+                            <!--end::Modal title-->
+                            <!--begin::Close-->
+                            <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                                <i class="ki-duotone ki-cross fs-1">
+                                    <span class="path1"></span>
+                                    <span class="path2"></span>
+                                </i>
+                            </div>
+                            <!--end::Close-->
+                        </div>
+                        <!--end::Modal header-->
+                        <!--begin::Modal body-->
+                        <div class="modal-body py-lg-10 px-lg-10">
+                            
+                            <form class="form" action="{% url 'accounting:add-expense' %}" id="paymentForm" method="post">
+                                {% csrf_token %}
+                            
+                                <div class="row gy-4">
+                                    
+                                    
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl-3 col-md-3">
+                                        <div class="input-group input-group-sm mb-2">
+                                            <span class="input-group-text">رقم الايصال</span>
+                                            <input type="text" class="form-control" name="receipt" required/>
+                                            <input type="hidden" class="form-control" name="type" value="income" required/>
+                                        </div>
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl-3 col-md-3">
+                                        <div class="input-group input-group-sm mb-2">
+                                            <span class="input-group-text" id="inputGroup-sizing-sm"> التاريخ </span>
+                                            <input class="form-control" placeholder="اختر التاريخ" name="date" id="kt_datepicker_2"/>
+                                        </div>
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl-6 col-md-6">
+                                        <div class="input-group input-group-sm mb-2">
+                                            <span class="input-group-text"> البند </span>
+                                            <select class="form-select" aria-label="Select example" name="category_id" required>
+                                                <option value="" disabled selected>اختر البند</option>
+                                                {% for category in expense_categories %}
+                                                <option value="{{ category.id }}">{{ category.name }}</option> 
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl-3 col-md-3">
+                                        <div class="input-group input-group-sm mb-2">
+                                            <span class="input-group-text">القيمة</span>
+                                            <input type="number" class="form-control" name="amount" id="amount" required/>
+                                            <input type="hidden" id="balance" value="{{ balance }}">
+                                        </div>
+                                        <p style="font-size:11px;" id="expense_amount_errorMessage"></p>
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <!--begin::Input group-->
+                                    <div class="col-xxl-9 col-md-9">
+                                        <div class="input-group input-group-sm mb-2">
+                                            <span class="input-group-text"> البيان </span>
+                                            <input type="text" class="form-control" name="description" required/>
+                                        </div>
+                                    </div>
+                                    <!--end::Input group-->
+
+                                    <div class="d-flex justify-content-end">
+                                        
+                                        <!--begin::Button-->
+                                        <button type="submit" class="btn btn-sm btn-success" id="save_expense_btn">حفظ</button>
+                                        <!--end::Button-->
+                                        <!--begin::Button-->
+                                        <button type="button" class="btn btn-sm btn-light" data-bs-dismiss="modal">اغلاق</button>
+                                        <!--end::Button-->
+                                    </div>
+                                    
+                                </div>
+                            
+                            </form>
+
+                        </div>
+                        <!--end::Modal body-->
+                    </div>
+                    <!--end::Modal content-->
+                </div>
+                <!--end::Modal dialog-->
+            </div>
+            <!--end::Modal - Add Income -->
             {% endif %}
 
 
@@ -273,11 +437,12 @@
                                     <!--begin::Input group-->
                                     <div class="col-xxl-5 col-md-5">
                                         <div class="input-group mb-2">
-                                            <span class="input-group-text"> تصنيف البند  </span>
+                                            <span class="input-group-text"> البند </span>
                                             <select class="form-select" aria-label="Select example" name="type" id="type" required>
-                                                <option value="" disabled selected>اختر تصنيف البند</option>
-                                                <option value="income">ايرادات</option>
-                                                <option value="expense">مصروفات</option>
+                                                <option value="" disabled selected>اختر البند</option>
+                                                {% for category in income_categories %}
+                                                <option value="{{ category.id }}">{{ category.name }}</option> 
+                                                {% endfor %}
                                             </select>
                                         </div>
                                     </div>
@@ -373,6 +538,13 @@
 
 <script src="{% static 'assets/plugins/custom/datatables/datatables.bundle.js' %}"></script>
 
+<script>
+    $("#kt_datepicker_1").flatpickr();
+</script>
+
+<script>
+    $("#kt_datepicker_2").flatpickr();
+</script>
 
 <script>
     
@@ -383,6 +555,7 @@
 	},
     "lengthMenu": [50, 100, 200, 300],
     "pageLength": 50,
+    "ordering": false, 
    
 	"dom":
 		"<'row mb-2'" +
@@ -396,10 +569,65 @@
 		"<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
 		"<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
 		">"
-});
+    });
 
     
 </script>
+
+
+<script>
+
+        document.getElementById('amount').addEventListener('input', function() {
+        const amountInput = this.value;
+        const errorMessage = document.getElementById('expense_amount_errorMessage');
+        const saveButton = document.getElementById('save_expense_btn');
+        const balance = parseFloat("{{ balance }}");
+        
+        // التحقق من أن القيمة رقم
+        if (isNaN(amountInput) || amountInput === '') {
+            errorMessage.textContent = 'يجب إدخال مبلغ صحيح';
+            errorMessage.style.color = 'red';
+            this.style.borderColor = 'red';
+            saveButton.disabled = true;
+            return;
+        }
+        
+        const amount = parseFloat(amountInput);
+        
+        // التحقق من أن المبلغ أكبر من الصفر
+        if (amount <= 0) {
+            errorMessage.textContent = 'يجب أن يكون المبلغ أكبر من الصفر';
+            errorMessage.style.color = 'red';
+            this.style.borderColor = 'red';
+            saveButton.disabled = true;
+            return;
+        }
+        
+        // التحقق من أن المبلغ لا يتجاوز الرصيد
+        if (amount > balance) {
+            errorMessage.textContent = 'المبلغ المطلوب أكبر من الرصيد المتاح';
+            errorMessage.style.color = 'red';
+            this.style.borderColor = 'red';
+            saveButton.disabled = true;
+            return;
+        }
+        
+        // إذا كانت جميع الشروط صحيحة
+        errorMessage.textContent = '';
+        this.style.borderColor = '';
+        saveButton.disabled = false;
+    });
+
+    // تعطيل الزر عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', function() {
+        const saveButton = document.getElementById('save_expense_btn');
+        if (saveButton) {
+            saveButton.disabled = true;
+        }
+    });
+
+</script>
+
 
 
 <script>
